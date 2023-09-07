@@ -1,5 +1,5 @@
 # Computing Fundamentals 1 & 2
-Class projects made during my first CS classes! Simple C++ code that I learned when I first started programming.
+Class projects made during my first CS classes! Simple C++ code that I learned when I first started programming. This is the CC equivalent of CSUS CSC 10 and 15.
 
 Topics covered: 
 
