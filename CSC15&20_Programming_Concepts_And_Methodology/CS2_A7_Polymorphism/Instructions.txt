@@ -1,0 +1,35 @@
+For this assignment, begin by unzipping this folder and adding all the files in it to a new project.
+
+PA7-starter.zip
+
+The classes found here represent a partial implementation of a "framework" for implementing an interactive fiction game. (Here is some reminders of what a full-fledged game might look like: Lost Pig (Links to an external site.), 9:05 (Links to an external site.))
+
+The classes include:
+
+Room. This represents a single location in a game, which contains 0 or more Things.
+Thing. This represents a generic individual "thing" that can be in a room. Individual things can be examined by the player, causing a description to print.
+Item. An Item is a kind of Thing that is portable. For the purpose of this assignment, an Item just has a single bool variable named pickedUp, and the player causes this to change by using the actions "take" and "drop".
+Food. A food is a type of Item, representing something edible. It has a taste, as well as a member variable named isGood representing whether it is a "good"-tasting food or not.
+Specifications
+
+All specifications are listed IN the starter code. Your job is to implement every method listed in the .h files. DO NOT CHANGE anything in the .h files, just make corresponding .cpp files for each class.
+
+Important: I will compile your code with my own main() as well as the original .h files. If method names and other details in your submitted .cpp files don't match, they will not compile successfully and you will receive a 0.
+
+There is a simple main() set up which can help check whether your implementations of methods are working, but you should add your own testing as well.
+
+Other Information
+
+The starter code includes a complete main() that sets up and then plays a game using all the classes you need to implement. My recommendation is that you leave this as is, but comment in or out different parts of the code so that you can interactively test each feature as you get it built.
+The starter code also has a Utility class. This is already completely implemented, and it includes several static methods that may be of use to you. Because they are static methods, remember they have to be called with the classname attached to them -- for instance:
+Utility::PrintWrappedString(....);
+Here is an example of a completed program being run, using the code in main.cpp I provided you: All of the text after the "> " prompt is typed by the user.)
+pa7-example.txtPreview the document
+Submission
+
+Submit a .zipped folder that contains ONLY your version of these 4 files:
+
+Room.cpp
+Thing.cpp
+Item.cpp
+Food.cpp

@@ -1,0 +1,109 @@
+Introduction
+
+In this project, you will build a task-management system to track "to do" items. The structure of the code must be as specified here, using two different classes.
+
+Part A - The Task Class
+
+Create a class named Task, placing code in the appropriate .h and .cpp files.
+
+A Task object represents an individual task on a to-do list. It must include three member variables:
+
+title (example: "return overdue book")
+location (example: "library")
+priority -- a number between 1 and 5, with higher numbers representing more urgent tasks.
+Give the class the following public methods:
+
+A constructor with three parameters, in the same order as the first three variables above.
+Error checking: If the priority number given is out of bounds, print a warning and set the priority to the closest valid number (1 or 5).
+
+A method with this prototype:
+void ChangePriority(int newPriority);
+This must change the priority to the given number.
+Error checking: If the given number is out of bounds, print a warning and set the priority to the closest valid number (1 or 5).
+
+A method with this prototype:
+string Description() const;
+This must return a single string, containing these elements in order:
+The task's location surrounded by square brackets
+The task's title
+One or more "*" symbols, matching the task's priority.
+
+Example:
+[home] do laundry ***
+Three "getter" methods that simply return the values of the three private variables:
+string GetTitle() const;
+string GetLocation() const;
+int GetPriority() const;
+Part A hints:
+
+Make sure you read the specifications above carefully. Except for warnings when a value is out of range, none of these methods actually print anything!
+Part B - The TaskList Class
+
+Create a class named TaskList, placing code in the appropriate .h and .cpp files.
+
+A TaskList represents one entire to-do list. It must have the following private member variables:
+
+string listName; // a name for the entire list
+int numTasks;  // the current number of tasks on the list
+Task* allTasks[100]; // an array whose elements are pointers
+Notice that allTasks is an array of 100 pointers. Each element will start out as NULL, and will only be changed to point to an actual Task object as needed.
+
+Give the class all of the public methods listed below.
+
+A constructor with one parameter representing the list name.
+Remember a constructor should set all member variables.
+The elements of the allTasks array need to be set to NULL, and numTasks needs to be set to 0.
+
+A method with this prototype:
+void AddTask(string taskTitle, string taskLocation, int taskPriority);
+This must add a task to the list, dynamically allocating a new Task object and updating both numTasks and allTasks appropriately.
+
+Error checking: If a task with the same title is already on the list, print an error instead. Do not create a new task or change the list.
+
+A method with this prototype:
+void CompleteTask(string taskTitle);
+This must first check if a task with the given title exists on the list. If a task with the given title does NOT exist, just print an error. If it does, the following actions must happen, in order:
+Deallocate the corresponding Task object
+Copy elements of the list "downward" as needed to close the gap created by removing the given item.
+Decrease the value of numTasks.
+
+A method with this prototype:
+void CompleteTask(int index);
+This must first check if the given index is in range, between 0 and (numTasks-1). If it is out of range, just print an error. If it is in range, do the same three steps as in item 3:
+Deallocate the corresponding Task object
+Copy elements of the list "downward" as needed to close the gap created by removing the given item.
+Decrease the value of numTasks.
+
+A method with this prototype:
+void ShowAll() const;
+This must print the title of the list followed by all tasks, using a numbered list and the strings given by the Description() method applied to each task.
+
+Example:
+My Tasks
+0) [home] take out the trash **
+1) [home] do laundry ***
+2) [school] turn in homework *****
+3) [Safeway] buy candy 
+A method with this prototype:
+void ShowByPriority(int minPriority, int maxPriority) const;
+This must behave like ShowAll(), but only display those tasks with priority values >= minPriority and <= maxPriority.
+
+A method with this prototype:
+void ShowByLocation(string location) const;
+This must behave like ShowAll(), but only display those tasks whose location matches the given location.
+
+A deconstructor for the TaskList class.
+This must go through any non-NULL elements in the array and deallocate the corresponding Task objects.
+Part B hints/info:
+
+You should make private methods to help with the implementation of the public methods listed here. You may add as many private methods as you want, but the set of public methods must exactly match the list below.
+It is crucial to deallocate objects when they are removed from the list. Grading will include a test of memory management, with penalties for any memory that is dynamically allocated but not deallocated correctly.
+Submission Instructions
+
+Place all four files:
+Task.h
+Task.cpp
+TaskList.h
+TaskList.cpp
+
+into a folder, compress it, then upload the resulting .zip file. 

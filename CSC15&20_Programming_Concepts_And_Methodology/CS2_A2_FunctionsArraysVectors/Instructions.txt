@@ -1,0 +1,66 @@
+Think of these programming tasks as the C++ equivalent of an athletic drill or practicing scales on a musical instrument. All of these tasks are the kind of programs that you should be able to write with the skills expected for CS 2.
+
+It's okay if you cannot do all of these... for now. The goal is to figure out what you have forgotten, and therefore what you need to go practice.
+
+
+Strong advice: Use resources. If you find you’ve forgotten some syntax detail, what should you do about that? Of course you can ask me, or others, for help, but CS 2 will more and more rely on your ability to leverage resources to solve problems, so now is the time to establish the right habits. In order of preference, here are some good places to look:
+
+Your own CS 1 notes and programs.
+Our current textbook. (The first several chapters cover the basic “big ideas” from CS 1. Look at the table of contents to find the section that might help you.)
+http://www.cplusplus.com/reference/ (Links to an external site.)  (Links to an external site.)(a good overall reference)
+Instructions
+
+Try to complete as many of the following tasks as possible. Make sure you test each one before moving on. Keep the code you create.
+
+(1) Write a program that reads in a temperature in Celcius and displays the corresponding temperature in Fahrenheit. The mathematical formula for converting is:
+F = C*(9/5) + 32
+
+[Hint: "math" and "C++ math" don't quite work the same.]
+
+(2) Write a program that:
+
+Asks the user to input a length in meters.
+Reports the corresponding distance in feet and inches. 
+(It is okay to round down to the nearest inch)
+Example
+
+Enter a length in meters: 1.5
+In non-metric units, that is: 4 feet and 11 inches
+[Hint A:  1 meter = 39.37 inches, and 1 foot = 12 inches]
+[Hint B: How do we get C++ to give the remainder of a division calculation?]
+
+(3) Write a program that reads in a list of integers from the user until the user enters the value 0. When the 0 is entered, display the sum and average of all the numbers entered.
+
+(4a) Write the prototype and definition of a function named RollDice that calculates the result of rolling a set of dice has the following specification:
+
+It has two parameters, both ints. The first specifies the number of sides per dice, and the second one specifies the number of dice.
+It calculates and returns the sum of all rolls.
+(4b) In your main() function, ask the user for a number of sides and a number of dice, then use this information to call the RollDice() function. Then report its return value to the user.
+
+(5) Write a program that reads in a list of words from the user until the user enters the word “END”. Then, display a list of word lengths, from 1 to 10, and how many words of each length were entered. For instance, after the user has typed these 12 words:
+
+cat
+dog
+in
+chair
+at
+pizza
+fox
+elephant
+window
+ocean
+avocado
+light
+the output should look like this:
+
+Number of words with length 1: 0
+Number of words with length 2: 2
+Number of words with length 3: 3
+Number of words with length 4: 0
+Number of words with length 5: 4
+Number of words with length 6: 1
+Number of words with length 7: 1
+Number of words with length 8: 1
+Number of words with length 9: 0
+Number of words with length 10: 0
+[Hint: You will need to use arrays.]

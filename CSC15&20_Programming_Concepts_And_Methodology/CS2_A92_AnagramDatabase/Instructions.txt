@@ -1,0 +1,269 @@
+Introduction
+
+This assignment has two phases. In the first phase, you will build a specialized data-storage class that enables the implementation of the second phase, using recursive backtracking to generate anagrams.
+
+Starter Code
+
+The starter code is here:
+
+pa11-starter.zip
+
+This includes partially-implemented versions of two classes (LetterInventory, AnagramSolver), a complete main program, and three dictionary files (small.txt, medium.txt, large.txt).
+
+ 
+
+Phase 1
+
+Implement a class called LetterInventory that can be used to keep track of an "inventory" of letters of the alphabet.  The constructor for the class takes a string and computes how many of each letter are in the string. It only needs to keeps track of the 26 letters of the alphabet, and ignores upper vs lowercase. (You should simply convert everything to lowercase and store the data that way.)
+
+The class must have public methods with the prototypes already listed in the LetterInventory.h file:
+
+Constructor: This must initialize the new LetterInventory object, containing data about the counts of each letter of the alphabet found in the data string. Ignore anything that isn't a letter, and treat upper and lowercase letters as equivalent.
+
+IsEmpty: Returns true/false to indicate whether the inventory is "empty" -- that is, whether the total counts for all letters is 0.
+
+Show: This is a convenience method, for testing, that is already implemented, which simply prints information about the current contents of the object.
+
+Insert: This must "insert" the contents of the other object into the current object. The counts for individual letters and the totalCount variable must increase based on what letters and counts are in the other object.
+
+Remove: This must change the current object to represent "removing" the other inventory from the inventory -- that is, subtracting the counts in the other inventory from this object’s counts, as well as subtracting from the totalCount variable. If any resulting letter count would end up negative, throw a string exception with the message "Attempt to call Remove that would yield a negative count, not possible!"
+
+CanRemove:
+Check if the remove action, as described above, can be carried out without any counts going negative. If all of the resulting counts would be 0 or positive, return true; otherwise, return false.
+Hints
+
+All of the method definitions you need to fill in are relatively short!
+Remember a dictionary is an STL container and there are standard patterns for "looping through" it.
+You will probably find these standard library functions useful:
+isalpha (Links to an external site.)
+tolower (Links to an external site.)
+
+Phase 2
+
+Implement the AnagramSolver class, which uses a dictionary file (just a list of words, one per line) to find all combinations of words that have the same letters as a given phrase.
+
+The only method that you need to implement is the RecursiveSolver method, adapting the general recursive backtracking algorithm to this situation. It has three parameters:
+
+result represents the current sequence of words built up so far.
+remaining represents the remaining "supply" of letters, in the form of a LetterInventory object. It is this object your code needs to act on when it makes and unmakes choices.
+maxWordCount is the maximum number of words that should make up a completed anagram. If this is 0, then there is no limit on the number of words.
+Other thoughts/hints about how to get this working:
+
+This can and should use the same overall recursive backtracking pattern we have covered in class. Notice that the RecursiveSolver function does not return any value, though -- you need the version of the pattern that generates all solutions rather than determining (true/false) if this is a solution.
+The base case occurs when the remaining LetterInventory object is completely empty. (Why is this? Because it starts out with counts from the original phrase, so when it is exactly empty, all letters from the original phrase have been used.)
+During the recursive step, what are the "possible moves"? In this case, each possible move is using ONE word from the dictionary. Also note:
+Once the RecursiveSolver object is initialized, the data from the dictionary will be stored in the two private variables. Make sure you read the starter code through to understand how that data is set up.
+A word from the dictionary is only a possible move if its LetterInventory can be removed from the remaining LetterInventory.
+What does making and unmaking a move consist of? Think about what needs to happen to both the result vector and the remaining LetterInventory.
+You also want to make sure your recursive function backtracks (returns without doing any further exploration) at the right time. Think about how to do this given the value of maxWordCount hat will be passed into the function.
+Submitting
+
+To submit this assignment, put all four of these files in a folder and compress it:
+
+LetterInventory.h
+LetterInventory.cpp
+AnagramSolver.h
+AnagramSolver.cpp
+main.cpp
+
+Sample Output
+
+As a guide to how your program should behave, here is some sample output using the three dictionaries that are provided.
+
+Small dictionary
+
+Word or phrase (blank to stop): bogus
+Max words (0 = no max): 0
+Anagrams generated
+------------------
+bogus 
+bus go 
+go bus 
+go sub 
+sub go 
+------------------
+
+Word or phrase (blank to stop): shrub
+Max words (0 = no max): 0
+Anagrams generated
+------------------
+brush 
+shrub 
+------------------
+Medium dictionary
+
+Word or phrase (blank to stop): give an inch
+Max words (0 = no max): 2
+Anagrams generated
+------------------
+chain given 
+given chain 
+having nice 
+nice having 
+------------------
+
+Word or phrase (blank to stop): give an inch
+Max words (0 = no max): 0
+Anagrams generated
+------------------
+a given inch 
+a inch given 
+an give inch 
+an inch give 
+chain given 
+gave in inch 
+gave inch in 
+give an inch 
+give inch an 
+given a inch 
+given chain 
+given inch a 
+hang in vice 
+hang vice in 
+having nice 
+in gave inch 
+in hang vice 
+in inch gave 
+in vice hang 
+inch a given 
+inch an give 
+inch gave in 
+inch give an 
+inch given a 
+inch in gave 
+nice having 
+vice hang in 
+vice in hang 
+------------------
+Large dictionary
+
+Word or phrase (blank to stop): recursion
+Max words (0 = no max): 2
+Anagrams generated
+------------------
+cousin err 
+cruise nor 
+cur senior 
+curse iron 
+err cousin 
+incur rose 
+incur sore 
+iron curse 
+nor cruise 
+recursion 
+rein scour 
+rose incur 
+rose runic 
+ruin score 
+runic rose 
+runic sore 
+score ruin 
+scour rein 
+senior cur 
+sore incur 
+sore runic 
+------------------
+Word or phrase (blank to stop): recursion
+Max words (0 = no max): 3
+Anagrams generated
+------------------
+con rue sir 
+con sir rue 
+cos ire run 
+cos ire urn 
+cos run ire 
+cos urn ire 
+cousin err 
+cruise nor 
+cue nor sir 
+cue sir nor 
+cur ire son 
+cur one sir 
+cur ore sin 
+cur roe sin 
+cur senior 
+cur sin ore 
+cur sin roe 
+cur sir one 
+cur son ire 
+curse iron 
+err cousin 
+incur rose 
+incur sore 
+ire cos run 
+ire cos urn 
+ire cur son 
+ire run cos 
+ire son cur 
+ire urn cos 
+iron curse 
+nor cruise 
+nor cue sir 
+nor rue sic 
+nor sic rue 
+nor sir cue 
+one cur sir 
+one sir cur 
+ore cur sin 
+ore run sic 
+ore sic run 
+ore sic urn 
+ore sin cur 
+ore urn sic 
+recursion 
+rein scour 
+roe cur sin 
+roe run sic 
+roe sic run 
+roe sic urn 
+roe sin cur 
+roe urn sic 
+rose incur 
+rose runic 
+rue con sir 
+rue nor sic 
+rue sic nor 
+rue sir con 
+ruin score 
+run cos ire 
+run ire cos 
+run ore sic 
+run roe sic 
+run sic ore 
+run sic roe 
+runic rose 
+runic sore 
+score ruin 
+scour rein 
+senior cur 
+sic nor rue 
+sic ore run 
+sic ore urn 
+sic roe run 
+sic roe urn 
+sic rue nor 
+sic run ore 
+sic run roe 
+sic urn ore 
+sic urn roe 
+sin cur ore 
+sin cur roe 
+sin ore cur 
+sin roe cur 
+sir con rue 
+sir cue nor 
+sir cur one 
+sir nor cue 
+sir one cur 
+sir rue con 
+son cur ire 
+son ire cur 
+sore incur 
+sore runic 
+urn cos ire 
+urn ire cos 
+urn ore sic 
+urn roe sic 
+urn sic ore 
+urn sic roe 
+------------------

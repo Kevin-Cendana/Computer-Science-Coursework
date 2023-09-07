@@ -1,0 +1,39 @@
+Overall Instructions
+
+For each function listed below, complete its implementation to match the specification given in comments. 
+
+General rules:
+
+All functions must be implemented recursively.
+Unless otherwise stated for a specific function, no credit will be given if a function contains any loops.
+You may not use any global variables. 
+Other specific restrictions apply to individual functions, as indicated in the comments.
+Do NOT submit a main() function.
+However, while you are working on these, you should test each function a completely as possible. Try to think of cases that are especially tricky or unusual and make sure those work.
+Function Prototypes and Descriptions
+
+bool IsPowerOfTwo(int n);
+/// Determines if n is an exact positive power of 2
+/// (For instance: 2, 8, 128, and 1024)
+Additional Rules:
+
+You may not use pow() or anything other than ordinary arithmetic operators.
+Hints:
+
+What is the simplest case of a number that IS a power of 2?
+What is the simplest case of a number that is NOT a power of 2?
+How is the "power of 2"-ness of a number related to the "power of 2"-ness of something smaller than it?
+string ReplaceEsWithAs(string s);
+/// Return a string that is identical to s
+/// except that any 'e' is replaced with an 'a'
+/// (Assume all characters are lowercase.)
+Hints:
+
+What are the simplest cases?
+Handle the first character separately from all the other characters.
+int DigitSum(int n);
+/// Return the SUM of all digits in n
+Hints:
+
+n % 10 gives the rightmost digit of n
+What arithmetic can you perform on an int that will give you everything except the rightmost digit?

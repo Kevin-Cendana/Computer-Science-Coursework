@@ -1,0 +1,76 @@
+In this assignment, you will implement a PairValue class, which represents 2-dimensional value like a point on a grid or a vector (in the physics sense of "vector", not the C++ sense of the word "vector") — that is, an entity with x and y components.
+
+The class declaration must begin with the specifications shown here.
+
+class PairValue
+{
+ private:
+  double x;
+  double y;
+ public:
+   PairValue(double x, double y);
+   void Show() const;
+};
+First, implement the two methods shown:
+
+The constructor must initialize the two member variables appropriately.
+The Show() should simply prints out the x and y values. (I will mostly use this for testing, and you can use it for your own testing as you complete the rest of the assignment.)
+Then, add functionality to make the PairValue class work with each redefined operators described below.
+
++ and -
+Using + or - between two PairValue obejcts produces a third PairValue object that has its components set by adding or subtracting, as appropriate, the x- and y-components of the two objects.
+Example:
+PairValue a(3, 5);
+PairValue b(1, 2);
+PairValue c = a + b;
+// c should now have the value (4, 7)
+PairValue d = a - b;
+// d should now have the value (2, 3)
+* (dot product)
+Using the multiply operator between to PairValue objects carries out the dot product of the two coordinate pairs and returns a double value calculated this way:
+result = x1*x2 + y1*y2
+Example:
+PairValue a(3, 5);
+PairValue b(1.5, 2);
+cout << (a * b) << endl; // should print "14.5"
+* (scalar multiplication)
+Using the multiply operator between one PairValue object and one double value produces a resulting PairValue object whose components are multiplied by the specified double.
+Example:
+PairValue a(5, 4);
+PairValue answer = a * 1.5;
+// answer should now have the value (7.5, 6)
+%
+Using the "%" operator produces a double value that is the Euclidean distance between two PairValue objects. This is calculated by:
+distance = sqrt((x1-x2)2 + (y1-y2)2)
+Example:
+PairValue a(1, 3);
+PairValue b(4, 7);
+double d = a % b; 
+cout << d << endl; // would print "5"
+++
+Using the "++" operator changes the object it is applied to and causes the coordinate pair to "rotate counterclockwise". This is done as follows:
+new X coordinate = -(old Y coordinate)
+new Y coordinate = (old X coordinate)
+Example:
+PairValue p(7, 3);
+++p;
+// p should now have the value (-3, 7)
+(object conversion)
+Add object conversion to the class that makes it possible to convert it to a double. This should give the area of a rectangle with x and y as the side lengths.
+Example:
+PairValue r(5, 4);
+double area = r;
+cout << area << endl; // would print "20"
+<<
+Using the << operator with cout should display the pair of values in conventional (x, y) form.
+Example:
+PairValue a(3, 7);
+cout << a << endl;
+// would print "(3, 7)"
+
+cout << "How far away is " << a << "?" << endl;
+// would print "How far away is (3, 7)?"
+Submission
+
+To submit this assignment, put only the PairValue.h and PairValue.cpp files in a folder by itself. Compress it into a single .zip file and upload that.
+

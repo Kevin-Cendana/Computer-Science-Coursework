@@ -1,0 +1,46 @@
+Overview
+
+For this assignment, you will implement a different version of the task manager from scratch. (Though you'll find that some code you used before can be re-used.)
+
+This version of the task manager is structured somewhat differently. Firstly, there are two classes involved:
+
+Task
+This represents a single task, as it did last time.
+
+TaskList
+This represents an entire list of tasks, but this time storying them internally in a vector of pointers-to-Task. Theoretically a main program could have multiple TaskList objects, but for the purpose of the assignment you can imagine only one will be created.
+Also, the Task class now stores two pointer variables in addition to "plain" member variables:
+
+tags
+This is a pointer to a dynamically allocated array of strings.
+If it is NULL, then the task has no tags.
+Otherwise, it will point to a dynamically allocated array of strings, each representing a text "tag" that a task is marked with.
+
+prereqTask
+This is a pointer to a Task object, representing another task that needs to be completed before this one.
+If it is NULL, then there is no prerequisite task.
+Otherwise, it will point to another Task object. 
+This will affect both your destructor and copy constructor. ONLY the tags array needs to have a deep copy made. The prereqTask is just a link to another task, it should only have a shallow copy made. 
+
+Preparation
+
+To get started, copy these two files into a new project.
+
+Task.hPreview the document
+
+TaskList.hPreview the document
+
+Specifications
+
+All specifications for the assignment are in the descriptions for the methods of the Task and TaskList classes.  Your goal is to implement all methods listed exactly as they are described.
+
+You may NOT change existing code in the .h files. I will test your submission by compiling your code with my own main(). However, you may add methods or other variables if you decide it is needed.
+
+Submitting 
+
+Submit a single .zipped folder containin only these 4 files:
+
+Task.h
+Task.cpp
+TaskList.h
+TaskList.cpp

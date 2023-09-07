@@ -1,0 +1,60 @@
+Overall Instructions
+
+Place all declarations and definitions needed for the tasks below in one main.cpp file.
+
+In your main() function, include code that shows testing the functions and classes you created as thoroughly as possible.
+
+Part 1
+
+Create a function template named Pick() with three parameters of the same type and a return value of the same type as the parameters. When called, it should randomly pick one of the three parameters, and return that value.
+
+Part 2 
+
+Create a function template named GetChoice(), that has:
+
+Two string parameters
+Two other parameters, with the same type as each other.
+A return value with the same type as the two parameters.
+When it runs, it presents the user with a prompt using the two strings. Using a loop, it does input validation to continue the prompt until the user picks one of the items. Once they have picked a valid item, it returns the corresponding value from the other two parameters.
+
+Example A
+If I were to call
+
+  GetChoice("seven", "eleven", 7, 11)
+
+the user should see something like:
+
+  Please pick seven or eleven:
+
+If they (eventually) enter "seven", the function should return the integer value 7.
+
+Example B
+If I were to call
+
+  GetChoice("cat", "dog", "meow", "woof");
+
+the user should see something like:
+
+  Please pick cat or dog:
+
+If they (eventually) enter "dog", the function should return the string value "woof".
+
+Part 3
+
+Create a class template called UniqueList<T>. A UniqueList is simply a container of items that does not contain any duplicates. It always starts empty, so it will only have a single default (no-arguments) constructor. Aside from the constructor, it needs to have these methods:
+
+Insert
+Inserts the given item (of type T) into the list.
+If something equal to the given item already exists in the list, print an error and do NOT change the contents of the list.
+Size
+Returns the total number of items in the list.
+GetFirst
+Returns a copy of the first item inserted.
+GetLast
+Returns a copy of the most recent item inserted.
+GetMax
+Returns a copy of the maximum value item among the items in the list.
+(You can assume the type used for the items in the box works with comparison operators like <, >, <= and so on.)
+GetMin
+Returns a copy of the minimum value item among the items in the list. 
+(You can assume the type used for the items in the box works with comparison operators like <, >, <= and so on.)
