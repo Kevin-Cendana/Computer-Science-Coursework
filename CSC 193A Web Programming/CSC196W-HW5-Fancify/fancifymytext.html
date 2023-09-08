@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<script src = "fancifymytext.js"> </script>
+
+<html>
+	<head>
+		<title>Fancify Shamcify</title>
+		<link rel="stylesheet" type="text/css" href="styles.css">
+	</head>
+	<body>
+		<h1>Fancify my Text</h1>
+			<!-- test if js code is working
+			<button onclick= "showAlert()"> Click me! :D</button> -->
+		<form>
+			<!-- Large text field-->
+			<fieldset>
+				<!-- Border that says "Text"-->
+				<legend>Text</legend>
+				<textarea id = "inputText" name="inputText" rows="4" cols="30"></textarea>
+			</fieldset>
+			<fieldset>
+				<!-- 2nd Border that says "Fancify"-->
+				<legend>Fancify</legend>
+				<!-- Moo Button-->
+				<button id = "mooButton" type = "button" onclick = "toUpper(); mooSuffix();"> Moo </button>
+				<!-- Bigger Button -->
+				<button id="biggerButton" type="button" onclick="enlargeText(); helloWorld();"> Bigger </button>
+				<!-- Options: fancy / boring -->
+				<label onchange="fancify(), showAlert()" ><input type="radio" name="fancy" value="fancyShmancy"> FancyShmancy</label>
+				<label onchange="removeStyle()"><input type="radio" name="fancy" value="boringBetty"> BoringBetty</label>
+			</fieldset>
+		</form>
+	</body>
+</html>
+
+
