@@ -9,12 +9,12 @@ Computer Science (and related) coursework. Each class will have a README describ
 
 **Courses + Course Description:**
 
-- CSC 15 Programming Concepts & Methodology I
-- CSC 20 Programming Concepts & Methodology II
-- CSC 28 Discrete Structures for Computer Science
-- CSC 35 Introduction to Computer Architecture
-- CSC 134 Database Management Systems
-- CSC 135 Computability and Formal Languages
-- CSC 137 Computer Organizaiton
-- CSC 173 Data Visualization
-- CSC 193 Web Programming
+- CSC 15 Programming Concepts & Methodology I [C++]
+- CSC 20 Programming Concepts & Methodology II [C++]
+- CSC 28 Discrete Structures for Computer Science [C++]
+- CSC 35 Introduction to Computer Architecture [x64 Assembly]
+- CSC 134 Database Management Systems [Oracle SQL]
+- CSC 135 Computability and Formal Languages 
+- CSC 137 Computer Organization 
+- CSC 173 Data Visualization [Python, JS, Tableau, Observable]
+- CSC 193 Web Programming [HTML, CSS, JS]
