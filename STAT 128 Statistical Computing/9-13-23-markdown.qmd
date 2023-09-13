@@ -1,0 +1,76 @@
+---
+title: "9-13-23"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+# **Class**
+
+Who used Word or Google docs to do the homework?
+
+-   markdown is a totally general purpose "markup language" similar to HTML (CSS is a style sheet language)
+
+-   markdown languages basically say what to render, not how to render it
+
+# **Markdown Shortcuts**
+
+-   inline code : double \`
+
+    -   `5*2`
+
+-   bold: double \_
+
+    -   ***bold***
+
+-   italics: single \_
+
+    -   *italics*
+
+-   header: any number of hashtag
+
+# Math
+
+insert -\> latex math -\> display math $$
+y_i a x _i + b
+$$
+
+inline math: $y = ax+b$
+
+# Plots:
+
+```{r} [results = "hide"]}
+plot(1:5)
+```
+
+# Advantages of markdown:
+
+-   Very clean and easy to read
+
+-   Only 1 window / software
+
+-   Limited copy pasting and formatting
+
+# Disadvantages of markdown:
+
+-   Slight learning curve

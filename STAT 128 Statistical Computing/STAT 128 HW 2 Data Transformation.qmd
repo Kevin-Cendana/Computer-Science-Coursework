@@ -1,0 +1,76 @@
+---
+title: "STAT 128 HW 2 Data Transformation"
+format: html
+editor: visual
+---
+
+### **Questions**
+
+### **1**
+
+**Tweak each of the following R commands so that they run correctly:**
+
+``` r
+library(todyverse)
+ggplot(data = mpg) + 
+geom_point(mapping = aes(x = displ y = hwy)) +
+geom_smooth(method = "lm)
+```
+
+### **2**
+
+1.  **Explain R's argument matching rules in your own words using examples with the `seq()` function.**
+
+    ```{r}
+    # First arguments are based by attribute
+    ```
+
+2.  **Which parameters are the arguments matched to in this function call? `seq(3, length.out = 10, 6)`**
+
+### **3**
+
+**The following questions refer to the `flights`data frame in `nycflights13`package.**
+
+1.  **In a single pipeline for each condition, find all flights that meet the condition:**
+
+    -   **Had an arrival delay of two or more hours**
+
+    -   **Flew to Houston (`IAH` or `HOU`)**
+
+    -   **Were operated by United, American, or Delta**
+
+    -   **Departed in summer (July, August, and September)**
+
+    -   **Arrived more than two hours late, but didn\'t leave late**
+
+    -   **Were delayed by at least an hour, but made up over 30 minutes in flight**
+
+2.  **Sort `flights` to find the flights with longest departure delays. Find the flights that left earliest in the morning.**
+
+3.  **Sort `flights` to find the fastest flights. (Hint: Try including a math calculation inside of your function.)**
+
+4.  **Was there a flight on every day of 2013?**
+
+5.  **Which flights traveled the farthest distance? Which traveled the least distance?**
+
+6.  **Does it matter what order you used [`filter()Links to an external site.`](https://dplyr.tidyverse.org/reference/filter.html) and [`arrange()`](https://dplyr.tidyverse.org/reference/arrange.html) if you\'re using both? Why/why not? Think about the results and how much work the functions would have to do.**
+
+7.  **What happens if you specify the name of the same variable multiple times in a [`select()`](https://dplyr.tidyverse.org/reference/select.html) call?**
+
+8.  **Rename `air_time` to `air_time_min` to indicate units of measurement and move it to the beginning of the data frame.**
+
+### **4**
+
+1.  **Which carrier has the worst average delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about `flights |> group_by(carrier, dest) |> summarize(n())`)**
+
+2.  **Find the flights that are most delayed upon departure from each destination.**
+
+3.  **How do delays vary over the course of the day. Illustrate your answer with a plot.**
+
+4.  **What happens if you supply a negative `n` to [`slice_min()`](https://dplyr.tidyverse.org/reference/slice.html) and friends?**
+
+5.  **Explain what [`count()`](https://dplyr.tidyverse.org/reference/count.html) does in terms of the dplyr verbs you just learned. What does the `sort` argument to [`count()`](https://dplyr.tidyverse.org/reference/count.html) do?**
+
+### **5**
+
+**Come up with and answer your own question regarding flights. Answer it using a pipeline with at least 3 steps.**
