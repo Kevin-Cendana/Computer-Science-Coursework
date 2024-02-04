@@ -1,0 +1,165 @@
+---
+title: "HW8"
+author: "Kevin Cendana"
+format: 
+  html:
+    self-contained: true
+editor: visual
+---
+
+### **1**
+
+**Write a function that initializes the disease simulation by randomly infecting some proportion of the population. The function should accept these arguments:**
+
+-   **number of rows in the grid**
+
+-   **number of columns in the grid**
+
+-   **proportion of grid to start out infected, defaulting to 0.1.**
+
+**Hint: Use a matrix to represent infections, and then you can easily plot with** 
+
+```{r}
+initialize_grid <- function(rows, cols, proportion = 0.1) {
+  # calculate total # of cells & number of people infected
+  total_cells <- rows * cols
+  num_infected <- round(total_cells * proportion)
+  
+  # use those to create vector
+  initial_states <- c(rep(1, num_infected), rep(0, total_cells - num_infected))
+  
+  # shuffle the vector to randomize data
+  initial_states <- sample(initial_states)
+  
+  # convert the vector to a matrix to represent a grid, return
+  grid <- matrix(initial_states, nrow = rows, ncol = cols)
+  grid
+}
+
+# test data - show small array for now then plot in the next question 
+simulation_grid_test <- initialize_grid(rows = 10, cols = 10, proportion = 0.1)
+simulation_grid_test
+
+```
+
+### **2**
+
+**Write a function to plot the Susceptible, Infected, and Removed cells with the colors white, red, and grey, respectively.**
+
+```{r}
+
+plot_simulation_grid <- function(grid, title = "Simulation Grid") {
+  # colors for each state: susceptible (0), infected (1), removed (2)
+  state_colors <- c("white", "grey", "red")
+  
+  # ensure the grid is transposed (mandatory for the image function)
+  transposed_grid <- t(grid)
+  
+  # plot the grid without axes and w/ aspect ratio 1
+  image(1:ncol(transposed_grid), 1:nrow(transposed_grid), transposed_grid, col = state_colors, axes = FALSE, xlab = '', ylab = '', asp = 1, main = title)
+}
+
+  # initialize an 80x80 grid with a 10% infection rate
+simulation_grid <- initialize_grid(rows = 50, cols = 50, proportion = 0.1)
+
+# verify the number of each state in the grid
+table(simulation_grid)
+
+# plot the grid
+plot_simulation_grid(simulation_grid, "initial infection")
+```
+
+### **3**
+
+**Use vectorized code (not a for loop) to randomly infect approximately 50% of the cells EITHER ABOVE OR BELOW the infected cells. This is part of one step in the process. A full step will expose 8 neighboring cells to infection: 4 sides, and 4 corners.**
+
+**Plot your results to demonstrate correctness.**
+
+1.  **Use par(mfrow = c(1, 2))  for two side by side plots.**
+
+2.  **Index into the matrix by selecting all elements excluding the first or last row.**
+
+```{r}
+# initialize the grid w/ a small proportion of infected cells
+set.seed(492)  # for reproducibility
+initial_grid <- initialize_grid(rows = 50, cols = 50, proportion = 0.1)
+
+# generate a close contact matrix for cells above/below the infected cells
+prob_infect = 0.5  # have rng decide above or below
+cc_below <- matrix(sample(c(FALSE, TRUE), size = (nrow(initial_grid) - 1) * ncol(initial_grid), replace = TRUE, prob = c(1 - prob_infect, prob_infect)), nrow = nrow(initial_grid) - 1, ncol = ncol(initial_grid))
+
+# determine new infections based on contact, only below infected cells
+new_infections_below <- (initial_grid[-1, ] == 1) & cc_below
+
+# update the grid with new infections
+updated_grid <- initial_grid
+updated_grid[-nrow(updated_grid), ][new_infections_below] <- 1
+
+# change the state of previously infected cells to removed
+updated_grid[initial_grid == 1] <- 2
+
+# plot the initial and updated grids side by side
+par(mfrow = c(1, 2))
+plot_simulation_grid(initial_grid, "Initial Infection")
+plot_simulation_grid(updated_grid, "Infect neighbors below")
+
+```
+
+**4**
+
+**Extend the step above to all 8 neighbors of a cell by writing a function that performs a single infection step. The rule is that each infected cell infects susceptible neighbors with some fixed probability. Vectorized code or explicit for loops are both fine. The function should accept the following:**
+
+1.  **Data structure representing the current SIR (susceptible, infected, removed) state. This will be a matrix if you're following the standard advice. 🤔**
+
+2.  **Probability of infection, defaulting to 0.125**
+
+**Plot your results for a single step to demonstrate correctness. Your plot should resemble the one below, with new infections occurring randomly on all sides and corners of old infections.**
+
+```{r}
+# function to perform just 1 infection step
+infect_neighbors <- function(grid, prob_infect = 0.125) {
+  # seed the random number generator for reproducibility in this example
+  set.seed(492)
+
+  # generate random close contact boolean matrices for each direction
+  cc_right <- matrix(sample(c(FALSE, TRUE), size = nrow(grid) * (ncol(grid) - 1), replace = TRUE, prob = c(1 - prob_infect, prob_infect)), nrow = nrow(grid))
+  cc_left <- cc_right  # same dimensions for left
+  cc_up <- matrix(sample(c(FALSE, TRUE), size = (nrow(grid) - 1) * ncol(grid), replace = TRUE, prob = c(1 - prob_infect, prob_infect)), ncol = ncol(grid))
+  cc_down <- cc_up  # same dimensions for down
+  cc_diag <- matrix(sample(c(FALSE, TRUE), size = (nrow(grid) - 1) * (ncol(grid) - 1), replace = TRUE, prob = c(1 - prob_infect, prob_infect)), nrow = nrow(grid) - 1)
+  
+  # create a copy of the grid to update with new infections
+  xnew <- grid
+  
+  # infect right/left/up/down neighbors
+  xnew[, -ncol(grid)][cc_right & grid[, -1] == 1] <- 1
+  xnew[, -1][cc_left & grid[, -ncol(grid)] == 1] <- 1
+  xnew[-1, ][cc_up & grid[-nrow(grid), ] == 1] <- 1
+  xnew[-nrow(grid), ][cc_down & grid[-1, ] == 1] <- 1
+  
+  # infect diagonal neighbors
+  xnew[-1, -1][cc_diag & grid[-nrow(grid), -ncol(grid)] == 1] <- 1
+  xnew[-1, -ncol(grid)][cc_diag & grid[-nrow(grid), -1] == 1] <- 1
+  xnew[-nrow(grid), -1][cc_diag & grid[-1, -ncol(grid)] == 1] <- 1
+  xnew[-nrow(grid), -ncol(grid)][cc_diag & grid[-1, -1] == 1] <- 1
+  
+  # remove those who were formerly infected on the previous step
+  xnew[grid == 1] <- 2
+  
+  xnew
+}
+
+# set up the plotting area for two side-by-side plots
+par(mfrow = c(1, 2))
+
+# initialize the grid with a small proportion of infected cells
+initial_grid <- initialize_grid(rows = 50, cols = 50, proportion = 0.1)
+
+# run the infection step function
+updated_grid <- infect_neighbors(initial_grid)
+
+# plot initial and updated grid
+plot_simulation_grid(initial_grid, "Initial infection")
+plot_simulation_grid(updated_grid, "After one step")
+
+```

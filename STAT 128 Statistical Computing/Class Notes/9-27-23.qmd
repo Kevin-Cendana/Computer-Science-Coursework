@@ -1,0 +1,20 @@
+---
+title: "9-27-23"
+format: html
+editor: visual
+---
+
+```{r}
+# How to tell if a large dataframe is incomplete? (hw4q4) 
+# Generate incomplete data - data with a gap
+x <- c(1:12345, 12445:20000)
+class(x)
+hist(x) # the little gap in histogram implies incomplete
+d <- diff(x) # find gap between row values
+table(d) # table is like count-distinct
+# 1 100
+# 19899 1
+which.max(d)
+d[12340:12350]
+x[12340:12350]
+```

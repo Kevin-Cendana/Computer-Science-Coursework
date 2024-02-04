@@ -1,0 +1,98 @@
+---
+title: "9-25-SIR-model"
+format: html
+editor: visual
+---
+
+# Goals: Create, modify, plot matrices
+
+```{r}
+# A[row,column]
+A <- matrix(0, nrow = 3, ncol = 4)
+A[1,1] <- 1
+A[2,4] <- 2
+
+# t for transpose (flips)
+t(A) 
+
+# image
+image(t(A))
+
+rows <- seq(nrow(A))
+
+# subsets by index
+A
+```
+
+if one of i or j is missing in A\[i,j\] then it returns ALL:
+
+```{r}
+# first row, all columns:
+A[1, ]
+
+# pick out the last column:
+A[ ,4]
+
+# shows all columns for all rows
+A[rows,]
+
+A[rev(rows), ]
+```
+
+```{r}
+# bring it together to make the right plot
+# maps colors to..                  0       1      2
+image(t(A[rev(rows), ]), col = c("white", "red", "grey"))
+
+# think about which numbers should we map to susceptible infected and removed
+  # 0 = susceptible, 1 = infected, 2 = removed
+```
+
+### logical subsets
+
+```{r}
+x <- seq(1)
+xbig <- 5 < x
+x[xbig]
+
+# this returns elements of x that are larger than 5
+# just like dplyr::filter
+x[5 < x]
+
+# more generally:
+# x[condition]
+# returns those elements of x where condition is TRUE
+
+# select elements of x that are between 3 and 6, inclusive
+x[3 <= x & x <= 6]
+
+y <- c(TRUE, TRUE, FALSE)
+
+# what will this return?
+# hint - not an error!
+# effectively skipped every 3rd element
+x[y]
+
+# avoid this
+# indexing by logical vectors where the number of elements doesn't line up
+
+0 < A
+
+# pick out those elements of A that are greater than 0
+A[0 < A]
+
+# set them to 100:
+A[0 < A] <- 100
+```
+
+```{r}
+# select all elements of A except for the first row
+A[2:nrow(A), ]
+A[2:3, ]
+
+# select all the elements of A except for the first row
+A[-1, ]
+A[-1, ] <- 300
+
+# subsets by index
+```

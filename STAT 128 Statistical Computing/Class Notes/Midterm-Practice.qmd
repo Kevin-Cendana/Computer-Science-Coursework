@@ -1,0 +1,680 @@
+---
+1. Transaction ID will be uncorrelated with any other variables
+2. Transaction ID has no relationship with the transaction amount
+4. Transaction ID will be positively correlated with date---
+title: "Midterm Practice"
+author: "Kevin Cendana"
+format: html
+editor: visual
+---
+
+```{r}1. key value store - Atomic Vector}
+2. regular seq of #s - List
+3. general purpose container - List
+4. ordered container of data types - List
+5. table consisting of rows n cols - Data Frame
+
+library(tidyverse)
+
+# basics
+employment <- read_csv("employment.csv")
+# read file
+names(employment)
+# print column names
+na.omit(emp)
+# remove NA values
+
+# plotting (mneumonic: GGDAXY)
+ggplot(data = employment, aes(x = title, y = employ32)) +
+  geom_point() +
+  labs(title = "cool graph", x = "title", y = "employ32")
+
+# graph type: geom_point/histogram/bar
+# decorating: labs(title,x,y), geom_smooth/lines, theme(minimal)
+# set limit: scale_x/y_continuous(limits = c(0, 100))
+
+# pipeline
+employment |> names()
+# same as names(employment)
+
+# w/o pipeline
+data_filtered = filter(employment, title == "Astronomers")
+data_summarized = summarize(data_filtered, avg = mean(med_wage))
+
+# w/ pipeline
+data_summarized2 = employment |> filter(title == "Astronomers") |>
+  summarize(avg = mean(med_wage))
+head(data_summarized)
+
+# select, deselect, mutate to add col, rename
+new_df = employment |> select(title, employ32)
+# select specific column
+new_df = employment |> select(-entry_educ, -onjob_training)
+# remove col
+employment |> mutate(all_employ = employ22 + employ32)
+# mutate
+employment |> rename(new_title = title)
+# rename
+
+# filter, arrange
+new_df |> filter(title == "Astronomers")
+employment |> arrange(title)
+# arrange rows based on col
+employment |> arrange(desc(title))
+# descending
+
+# group by (no visual change, affects subsequent functions)
+data <- data.frame(
+  category = c("A", "A", "B", "B", "C", "C"),
+  value = c(10, 15, 20, 25, 30, 35))
+grouped_data <- data |> group_by(category)
+grouped_data |> summarize(total_value = sum(value))
+
+# pivot longer
+data <- data.frame(
+  # currently in wide format
+  product_A_2021 = 1,
+  product_A_2022 = 2,
+  product_B_2021 = 3,
+  product_B_2022 = 4
+)
+
+head(data)
+# before pivot longer
+
+long_data <- data |> pivot_longer(
+  cols = everything(),
+  names_to = c("product", "year"),
+  # split into two columns
+  names_pattern = "product_(.)_(....)"
+  # how to split
+)
+
+head(long_data)
+
+```
+
+```{r}
+library(tidyverse)
+ev <- read_delim("electric_vehicle.txt", delim = "\t")
+head(ev)
+```
+
+## Midterm Questions
+
+```{r}
+library(tidyverse)
+# 1a. read data set from delimited text file
+emp <- read_delim("employment.csv", delim = ",") # read file
+emp <- emp[,-1] # remove 1st col (switch to (-1, ) for row)
+
+# 1b. convert col to proper type
+library(lubridate)
+#emp$date_column <- ymd_hms(emp$your_date_column)
+# emp <- mutate(emp, 
+#               med_wage = parse_double(med_wage))
+
+
+# 1c. rename col to be easier to work with
+names(emp)
+emp <- emp |>
+  rename(
+    # dummy_col = "...1",
+    job_title = "title",
+    employment_2022 = "employ22",
+    employment_2032 = "employ32",
+    median_wage = "med_wage",
+    education_required = "entry_educ",
+    job_training = "onjob_training"
+  )
+names(emp)
+```
+
+2.Answer basic questions about data.
+
+```{r}
+# 2a.Read and interpret documentation on data.
+
+# 2b.What are the number of rows and columns? dim
+dim(emp) # 832 rows, 6 cols
+
+# 2c.What does an observation represent?
+  # an observation seems to represent employment data, including job titles, employment projections, median wages, and required training/education
+
+```
+
+3.Manipulate the data.
+
+```{r}
+
+# 3a.Select subsets of rows based on logical conditions. filter
+sub_employment <- emp |>
+  filter(median_wage > 50000)  # filters jobs with median wages over $50,000
+
+# 3b.Pivot the data into a tidy form. pivot_longer
+tidy_employment <- emp |>
+  pivot_longer(cols = c(employment_2022, employment_2032), names_to = "year", values_to = "employment")
+
+# 3c.Create new columns, possibly using grouped calculations. mutate, group_by, summarize
+# emp2 <- emp |>
+#   group_by(job_title) |> # group by job_title (nothing yet, just group)
+#   mutate(average_wage = mean(median_wage)) |>  # add new col average_wage
+#   summarize(total_employment_2022 = sum(employment_2022)) # short summary, only 2 cols now
+#             
+# head(emp)
+```
+
+4.Plot the data. ggplot
+
+```{r}
+
+# 4a.Make scatter plots, line plots, comparative boxplots, histograms, grouping and changing aesthetics using variables.
+# 4b.Add appropriate title, x, y labels. +labs
+ggplot(data = emp, aes(x = job_title, y = employment_2032)) +
+  geom_point() +
+  labs(title = "plot of emp in 2022", x = "job title", y = "median wage")
+
+# 4c.Interpret the plots, explaining what they show in a paragraph.
+  # the scatter plot shows the relationship between various types of job (titles) and their median wage measured in 2022
+```
+
+5.  Model the data
+
+```{r}
+names(emp)
+# 5a.Fit simple linear models with 1 or 2 terms.
+linear_model <- lm(median_wage ~ employment_2022, data = emp)
+plot(linear_model)
+
+
+# 5b.Precisely describe models mathematically.
+ #eq: med_wage = (Intercept coefficient) + (emp_2022 coefficient) * employment_2022
+
+# 5c.Predict / interpolate other data points.
+  new_data <- data.frame(employment_2022 = c(1000, 5000, 12000)) # new df
+  predictions <- predict(linear_model, newdata = new_data)
+  
+head(predictions)
+```
+
+## Linear Model (similar to class ex)
+
+```{r}
+read_delim("waterServices.txt", delim = "\t")
+# from HW
+read_water_sensor2 <- function(fname){
+  water_raw <- read_tsv(fname, comment = "#")
+  
+  water <- water_raw |>
+    slice(-1) |>
+    select(3, 5, 6) 
+  
+  colnames(water) <- c("datetime", "temp_cel", "qual")
+  
+  water <- water |>
+    mutate(datetime = ymd_hm(datetime),
+           temp_far = as.double(temp_cel)*(9/5) + 32) |>
+    mutate(hour = hour(datetime) + minute(datetime) / 60)
+  return(water)
+}
+agua <- read_water_sensor2("waterServices.txt")
+
+# modeling predicts temperature based on the hour of the day, using a cyclic (sinusoidal) pattern.
+mod1 <- lm(temp_far ~ sin(hour*2*pi/24) + cos(hour*2*pi/24), data=agua)
+
+# coefficients of model "weights" given to each term
+coef(mod1)
+
+# predictions
+predictions <- predict(mod1, agua)
+
+with(agua, plot(datetime, temp_far))
+with(agua, lines(datetime, predictions, col='purple'))
+
+# predictions on new data:
+# One single prediction for 12:16 PM:
+h = 12.26
+predict(mod1, data.frame(hour = h))  # 65.73452
+
+# model parameters:
+parameters <- coef(mod1)
+parameters
+length(parameters) # 3, meaning there are 3 parameters in our model
+
+# Manual predictions, using the fitted coefficients
+65.8570579 + -2.0192586 * sin(h * 2 * pi/24) + 0.2604793*cos(h * 2 * pi/24) 
+# 65.73452 same as above
+
+predict(mod1, data.frame(hour = 1:24))
+
+# Simplify to a 2 parameter model:
+mod2 <- lm(temp_far ~ sin(hour*2*pi/24), data=agua)
+p2 <- predict(mod2, agua)
+with(agua, lines(datetime, p2, col='red'))
+# Happens to work pretty well. The reason we add the cos() term is to be able
+# to shift the sinusoid curve left and right.
+
+mod3 <- lm(temp_far ~ hour, data=agua)
+p3 <- predict(mod3, agua)
+with(agua, lines(datetime, p3, col='blue'))
+# Adds jagged lines because hour starts repeating every 24 hours
+
+mod4 <- lm(temp_far ~ datetime, data=agua)
+p4 <- predict(mod4, agua)
+with(agua, lines(datetime, p4, col='green'))
+# Treating datetime as a continuous numerical variable
+
+# Flat line, the simplest possible model.
+mod5 <- lm(temp_far ~ 1, data=agua)
+p5 <- predict(mod5, agua)
+with(agua, lines(datetime, p5, col='orange'))
+coef(mod5)
+mean(agua$temp_far)
+
+```
+
+## basic join
+
+```{r}
+library(dplyr)
+
+df1 <- data.frame(
+  ID = c(1, 2, 3),
+  Name = c("Alice", "Bob", "Charlie"),
+  Age = c(25, 30, 35)
+)
+
+df2 <- data.frame(
+  ID = c(2, 3, 4),
+  Name = c("Bob", "Charlie", "David"),
+  Occupation = c("Engineer", "Doctor", "Lawyer")
+)
+
+# joining the two data frames based on ID
+result <- inner_join(df1, df2, by = "ID")
+
+print(result)
+#   ID    Name.x Age    Name.y Occupation
+# 1  2       Bob  30       Bob   Engineer
+# 2  3   Charlie  35   Charlie     Doctor
+```
+
+## As an AI text-based model, I'm unable to generate plots or directly interact with data sets. However, I can guide you on how you can do it.
+
+\
+
+To check if the "price" column in the diamonds dataset follows Benford's Law, you would first need to install and load the necessary packages in R, which are ggplot2 and benford.analysis.
+
+\
+
+Here's a sample code you could use:
+
+\
+
+```         
+# Install necessary packages
+install.packages("ggplot2")
+install.packages("benford.analysis")
+
+# Load necessary packages
+library(ggplot2)
+library(benford.analysis)
+
+# Load the diamonds dataset
+data(diamonds)
+
+# Extract the first digit of each price
+first_digits <- substr(diamonds$price, 1, 1)
+
+# Convert the first digits to numeric
+first_digits <- as.numeric(first_digits)
+
+# Perform Benford's Law analysis
+benford_result <- benford(first_digits, number.of.digits = 1)
+
+# Plot the result
+plot(benford_result)
+```
+
+\
+
+Once you've generated your plot, you can analyze it to see if the distribution of the first digits in the "price" column follows Benford's Law. Benford's Law predicts that the first digits of many natural sets of numerical data will not be evenly distributed, but rather that lower digits (like 1 and 2) will appear more frequently than higher digits (like 8 and 9). If your plot shows this trend, then the "price" column follows Benford's Law. If not, then it doesn't.
+
+\
+
+Please note that this is a simplified approach and more rigorous statistical tests could be applied for a more thorough analysis.
+
+Sure, below is a step-by-step guide on how to do this:
+
+\
+
+First, load the tidyverse and ggplot2 package and load the diamonds dataset:
+
+\
+
+```         
+library(tidyverse)
+data(diamonds)
+```
+
+\
+
+Next, you need to extract the first digit from the price column. We will use the substr function to do this:
+
+\
+
+```         
+diamonds$first_digit <- substr(diamonds$price, 1, 1)
+```
+
+\
+
+Then, calculate the frequency of each first digit:
+
+\
+
+```         
+first_digit_freq <- diamonds %>% 
+  group_by(first_digit) %>% 
+  summarise(count = n()) %>% 
+  mutate(freq = count / sum(count))
+```
+
+\
+
+Now, you can plot the frequency of each first digit:
+
+\
+
+```         
+ggplot(first_digit_freq, aes(x = first_digit, y = freq)) +
+  geom_bar(stat = "identity") +
+  labs(x = "First Digit", y = "Frequency", 
+       title = "Distribution of First Digits in Diamond Prices")
+```
+
+\
+
+The resulting plot will show the frequency of each first digit in the price column. According to Benford's Law, the first digits of many sets of data are not evenly distributed, and instead, smaller digits like 1 and 2 are more common.
+
+\
+
+If the bar plot shows a decreasing trend from 1 to 9, it suggests that the price column in the diamonds data set follows Benford's Law. However, if the distribution is roughly even or does not show a clear decreasing trend, it suggests that the price column does not follow Benford's Law.
+
+Note: This is a very basic analysis and there are more rigorous statistical tests that can be used to determine if a dataset follows Benford's Law.
+
+R's S3 object-oriented system is a simple and flexible system for object-oriented programming. It is based on the concept of classes and methods.
+
+\
+
+In S3, an object can belong to a class, and methods (functions) can be specifically designed to handle objects of a certain class. The actual method that gets called is determined by the class of the first argument to the function.
+
+\
+
+Let's look at an example:
+
+\
+
+```         
+dd <- data.frame(a = rnorm(100), b = rnorm(100))
+```
+
+\
+
+In this case, `dd` is an object of class `data.frame`. When we call a function like `print(dd)`, R looks for a `print` method that is designed to handle `data.frame` objects. This is known as method dispatch.
+
+\
+
+The `print` function for `data.frame` objects is different than the `print` function for other types of objects. For example, `utils:::print.packageIQR` is a `print` method specifically designed to handle objects of class `packageIQR`.
+
+\
+
+In simpler terms, R's S3 system allows you to create functions that behave differently depending on what type of data they are given. It's like having a conversation where you adjust your language based on who you're talking to.
+
+use.
+
+\
+
+To illustrate this, let's take an example of creating a data frame and printing it using the S3 system.
+
+\
+
+```         
+# Creating a data frame
+dd <- data.frame(Name = c("John", "Anna", "Peter"), 
+                 Age = c(23, 21, 25), 
+                 Sex = c("M", "F", "M"))
+
+# The class of the dd object is "data.frame"
+class(dd)
+
+# Printing the data frame
+print(dd)
+```
+
+\
+
+In this case, the `print()` function behaves differently depending on the class of the input object. If the input is a data frame, it prints the data in a tabular format.
+
+\
+
+Now, let's look at the `print.packageIQR` function from the `utils` package.
+
+\
+
+```         
+# Load the utils package
+library(utils)
+
+# Use the print.packageIQR function
+print.packageIQR(dd)
+```
+
+\
+
+The `print.packageIQR` function is a method for the generic function `print()`. It is specifically designed to print objects of class "packageIQR". If we try to use it with an object of a different class (like our data frame `dd`), it will not work properly.
+
+\
+
+This demonstrates how the S3 system allows for different behaviors of a function depending on the class of the input objects.
+
+The error message "could not find function" is typically thrown in R when you try to use a function that doesn't exist or isn't available in your current environment.
+
+In your case, the error message is saying that the function `print.packageIQR()` doesn't exist. The function `print.packageIQR()` is not a standard function in R or in the `utils` package, which is why R can't find it.
+
+If you're trying to print a data frame, you can just use the `print()` function:
+
+``` r
+print(dd)
+```
+
+If you're trying to print the interquartile range (IQR) of each column in your data frame, you might want to use the `IQR()` function in a `sapply()` or `lapply()` function:
+
+``` r
+sapply(dd, IQR, na.rm=TRUE)
+```
+
+This will apply the `IQR()` function to each column in your data frame and return the results. Note that the `na.rm=TRUE` argument is used to remove NA values before calculating the IQR.
+
+Here is the rewritten R code:
+
+\
+
+```         
+# Using [[ rather than getElement
+# Using only nested function calls rather than a pipe
+# Saving the result to d2 rather than d
+d2 <- head(data.frame(data()[["results"]][["Item"]]))
+
+# Verifying that d and d2 are the same
+identical(d, d2)
+```
+
+\
+
+Please note that the code assumes that the function `data()` returns a list with a "results" element, which itself is a list with an "Item" element. The function `identical(d, d2)` will return TRUE if `d` and `d2` are the same, and FALSE otherwise.
+
+ez to understand comments for dummy simple 2 the point
+
+*3 pts*
+
+```{r}
+d <- data() |>
+  getElement("results") |>
+  data.frame() |>
+  getElement("Item") 
+head(d)
+```
+
+Rewrite the above R code to do the following:
+
+1.  Use `[[` rather than `getElement`
+2.  Use only nested function calls `bar(foo())` rather than a pipe `foo() |> bar()`.
+3.  Save the result to `d2` rather than `d`
+4.  Verify that `d` and `d2` are the same.
+
+Here is the rewritten R code based on your requirements:
+
+```         
+# Get the data and save it to variable d2
+d2 <- data()[["results"]][["Item"]]
+
+# Display the head of d2
+head(d2)
+
+# Verify that d and d2 are the same
+identical(d, d2)
+```
+
+Note: This code assumes that the function `data()` is defined somewhere else in your code and it returns a list that includes "results" and "Item". Also, the variable `d` should be defined before the `identical(d, d2)` line is executed.
+
+Here is the function you requested in R language:
+
+\
+
+```         
+check_dataframe <- function(df) {
+  # Check if the object is a data frame
+  if (class(df) != "data.frame") {
+    return(FALSE)
+  }
+  
+  # Check if there are any numeric columns
+  for (col in colnames(df)) {
+    if (class(df[[col]]) == "numeric") {
+      return(TRUE)
+    }
+  }
+  
+  # If there are no numeric columns, return FALSE
+  return(FALSE)
+}
+
+# Testing the function
+t1 <- data.frame(a = 100, b = "hi") 
+print(check_dataframe(t1)) # should return TRUE
+
+t2 <- as.list(t1) 
+print(check_dataframe(t2)) # should return FALSE
+
+t3 <- data.frame(b = "only strings")
+print(check_dataframe(t3)) # should return FALSE
+```
+
+\
+
+This function first checks if the object is a data frame. If it is not, the function returns FALSE. If it is a data frame, the function then checks each column to see if any are numeric. If any numeric columns are found, the function returns TRUE. If no numeric columns are found, the function returns FALSE.
+
+*4 pts*
+
+Write a function that returns `TRUE` if an object is a data frame and has any numeric columns, and `FALSE` otherwise.
+
+```{r}
+# return TRUE
+t1 <- data.frame(a = 100, b = "hi")
+
+# return FALSE - it's a list, not a data frame
+t2 <- as.list(t1)
+
+# return FALSE - no numeric columns
+t3 <- data.frame(b = "only strings")
+```
+
+## 
+
+1.  \
+
+2.  \
+
+    The function `benford(x)` returns a measure of how closely the distribution of first digits in the numeric vector `x` matches the distribution predicted by Benford's Law. The closer the output of `benford(x)` is to 1, the more closely the numbers in `x` follow Benford's Law. So, bigger values of `benford(x)` mean that the numbers in `x` follow Benford's Law more closely.
+
+3.  \
+
+    The greatest value that `benford(x)` can return is 1. This would occur when the distribution of the first digits in `x` exactly matches the distribution predicted by Benford's Law. An example of a numeric vector that would produce a value close to 1 might be a vector of numbers drawn from a logarithmic distribution, such as:
+
+\
+
+```         
+x <- 10^(runif(1000, min = 0, max = 3))
+```
+
+\
+
+3.  \
+
+4.  The smallest value that `benford(x)` can return is -1. This would occur when the distribution of the first digits in `x` is exactly opposite to the distribution predicted by Benford's Law. This is, all the first digits in `x` are 9's, while Benford's Law predicts that smaller digits should be more common. An example of a numeric vector that would produce a value close to -1 might be:
+
+\
+
+```         
+x <- rep(9, 1000)
+```
+
+\
+
+Note that these are hypothetical examples and actual results may vary depending on the specific distribution of the numbers in the vector.
+
+1\. Bigger values of benford(x) mean that the numbers in x follow Benford's Law more closely. This is because the function calculates the difference between the actual distribution of the first digits in x and the expected distribution according to Benford's Law. A smaller difference (i.e., a larger value of benford(x)) indicates a closer match.
+
+2\. The greatest value that benford(x) can return is 1. This would occur if the actual distribution of the first digits in x perfectly matched the expected distribution according to Benford's Law. An example of a numeric vector that is within 0.1 of the greatest value could be a vector that contains a large number of numbers starting with the digit 1, since Benford's Law predicts that about 30% of numbers in many real-world collections of numbers begin with the digit 1. For example, the vector c(1, 10, 100, 1000, 10000) would likely produce a value of benford(x) close to 1.
+
+3\. The smallest value that benford(x) can return is -1. This would occur if the actual distribution of the first digits in x was completely opposite to the expected distribution according to Benford's Law. An example of a numeric vector that produces the smallest value could be a vector that contains a large number of numbers starting with the digit 9, since Benford's Law predicts that only about 5% of numbers in many real-world collections of numbers begin with the digit 9. For example, the vector c(9, 90, 900, 9000, 90000) would likely produce a value of benford(x) close to -1.
+
+The line `fd <- factor(fd, levels = 1:9)` is used to convert the variable `fd` into a factor with levels from 1 to 9. This is done to ensure that `fd` is treated as a categorical variable with specific levels, rather than a numeric variable.
+
+\
+
+If you remove this line, `fd` would be treated as a numeric variable, which could potentially affect the calculations done later in the function. For example, the `table(fd) / length(x)` operation would behave differently if `fd` is numeric vs if it is a factor.
+
+\
+
+In simple terms, this line is making sure that `fd` is treated as a series of categories (1 through 9), not as numbers that could be mathematically manipulated.
+
+{r}benford \<- function(x){ expected \<- log10(1 + 1 / (1:9)) fd \<- substr(gsub('\[0.\]', '', x), 1, 1) fd \<- factor(fd, levels = 1:9) actual \<- table(fd) / length(x) 1 - sum(abs(actual - expected))}
+
+In the function above, what is the purpose of the line `fd <- factor(fd, levels = 1:9)`?
+
+*Hint: experiment with taking it out.*
+
+short simple answer ez 4 dummy dum to understand
+
+Here's how you could rewrite the R code based on your requirements:
+
+\
+
+```         
+d2 <- head(data.frame(data()[["results"]][["Item"]]))
+identical(d, d2)
+```
+
+\
+
+In this code:
+
+-   `data()[["results"]][["Item"]]` replaces `getElement("results") |&gt; getElement("Item")` using `[[` instead of `getElement`.
+
+-   `head(data.frame(...))` is a nested function call replacing the pipe operator.
+
+-   The result is saved to `d2` instead of `d`.
+
+-   `identical(d, d2)` is used to verify that `d` and `d2` are the same.

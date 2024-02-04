@@ -1,0 +1,331 @@
+---
+title: "hw7"
+author: "Kevin Cendana"
+format: 
+  html:
+    self-contained: true
+editor: visual
+---
+
+## 1. vocabulary
+
+### 1.1
+
+Call `sample` to select five random lowercase letters. Hint: use `letters`.
+
+```{r}
+library(tidyverse)
+# ?sample
+sample(letters, 5)
+```
+
+### 1.2
+
+What are the parameters in the `sample` function from the `base` package? Which have default arguments?
+
+**After running ?sample, I can see that the arguments are**
+
+-   **x: a vector with 1+ elements or int,**
+
+-   **n: a positive number representing the number of items to choose from**
+
+-   **replace: a boolean t/f to decide if sampling should be replaced**
+
+-   **prob: vector of probability weights for the RNG**
+
+-   **useHash: logical to decide if user wants to use the hash version**
+
+**All of them have default arguments except 'x', so we just need a single number to use 'sample'.**
+
+### 1.3
+
+What is the role of `...` as described in the documentation for `paste`? Note we read `...` as "dot-dot-dot". Provide an example demonstrating how it works.
+
+**'...' is used to represent 1 or more objects, which are converted to character vectors in this specific case. Here's an example of how we can use a varying number of parameters for this function:**
+
+```{r}
+# ?paste
+rObj <- c("1","2","3")
+paste(1:5) 
+paste(rObj) 
+paste("Hello", "there", "world!", ":))))") 
+```
+
+### 1.4
+
+Identify the following in the code below.
+
+function, parameter, argument, function call, body, return value
+
+-   **function: greet, with entire declaration being greet \<- function(name, ending = ".")**
+
+-   **parameters: name, ending (with a default value of ".")**
+
+-   **argument: students**
+
+-   **function call: greet("students")**
+
+-   **body: { lastpart \<- paste0(name, ending) paste("Hello", lastpart) }**
+
+-   **return value: the result of 'paste("Hello", lastpart)' which is "Hello students."**
+
+```{r}
+greet <- function(name, ending = "."){
+  lastpart <- paste0(name, ending)
+  paste("Hello", lastpart)
+}
+
+greet("students")
+```
+
+## 2
+
+Turn each of the following code snippets into functions.
+
+-   give them descriptive names
+-   use an appropriate number of parameters
+-   verify that they work
+
+### 2.1
+
+**given example:**
+
+```{r}
+x <- runif(20) 
+x[sample.int(20, size=5)] <- NA 
+y <- runif(30) 
+y[sample.int(30, size=8)] <- NA
+z <- runif(20)
+z[sample.int(20, size=17)] <- NA
+```
+
+**answer: function "fillWithNas" lets user pick \# of random and NAs to put, defaults to 5 NAs if left blank:**
+
+```{r}
+fillWithNas <- function(numRandom, numNa = 5) {
+  x <- runif(numRandom)
+  x[sample.int(numRandom, size = numNa)] <- NA
+  x
+}
+a <- fillWithNas(20, 19) # 20 random numbers, 19 NAs
+a
+b <- fillWithNas(20) # 20 random numbers, default 5 NAs
+b
+```
+
+### 2.2
+
+**given example:**
+
+```{r}
+mean(is.na(x)) 
+mean(is.na(y))
+mean(is.na(z))
+```
+
+**answer: function proportionOfNas finds the proportion of NAs (similar to example)**
+
+```{r}
+proportionOfNas <- function(vector) {
+  mean(is.na(vector))
+}
+proportionOfNas(x)
+proportionOfNas(y)
+proportionOfNas(z)
+```
+
+### 2.3
+
+**given example:**
+
+```{r}
+x / sum(x, na.rm = TRUE) 
+y / sum(y, na.rm = TRUE)
+z / sum(z, na.rm = TRUE)
+```
+
+**answer: function divideBySum divides each element of x by the sum of all elements in x (ignoring NAs)**
+
+```{r}
+divideBySum <- function(vector) {
+  vector/sum(vector, na.rm= TRUE)
+}
+divideBySum(x)
+```
+
+### 2.4
+
+**given example:**
+
+```{r}
+round(x / sum(x, na.rm = TRUE) * 100, 1)
+round(y / sum(y, na.rm = TRUE) * 100, 1)
+round(z / sum(z, na.rm = TRUE) * 100, 1)
+```
+
+**answer:** **function divideBySumTimes100 divides each element of x by the sum of all elements in x (ignoring NAs). rounds to nearest 10th by default**
+
+```{r}
+divideBySumTimes100 <- function(vector, roundTo = 1) {
+  round(vector/sum(vector, na.rm=TRUE) * 100, roundTo)
+}
+c <- divideBySumTimes100(x,1) # round to nearest 10th
+c
+c <- divideBySumTimes100(x) # round to nearest default argument (also 10)
+c
+```
+
+## 3
+
+Given a vector of birthdates, write a function to compute the age in years, and demonstrate that it works on `bd` below.
+
+**given example**
+
+```{r}
+bd <- as.Date(c("2020-01-01", "1950-06-01"))
+bd
+```
+
+**answer: calculateAgeFromDate takes a vector of dates and calculates the age based on the present time (using sys.date, .25 for leap years). rounds to nearest int by default**
+
+```{r}
+calculateAgeFromDate <- function(birthdates, round = TRUE) {
+    # convert if not already date type
+    birthdates <- as.Date(birthdates) 
+    
+    # rounds age to nearest integer by default
+    if (round == TRUE) {
+      ages <- floor((Sys.Date() - birthdates) / 365.25) 
+    } else {
+      ages <- (Sys.Date() - birthdates) / 365.25
+    }
+    
+    ages
+}
+ages <- calculateAgeFromDate(bd)
+ages
+ages <- calculateAgeFromDate(bd, FALSE)
+ages
+```
+
+## 4 (Corrected)
+
+```{r}
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+```
+
+In the above variant of `rescale01()`, infinite values are left unchanged. Rewrite it so that -Inf is mapped to 0, and Inf is mapped to 1.
+
+```{r}
+# Comments: Those entries that were Inf, -Inf should be 1, -1 in the result.
+# Right way from 10/27 notes:
+# 1) filter out the infinities first
+# 2) rescale
+# 3) set infinities in result to 0,1
+
+rescale01 <- function(x) {
+  # filter out infinites first
+  finite_x <- x[!is.infinite(x)]
+  
+  # store original positions of Inf and -Inf
+  inf_pos <- which(x == Inf)
+  minus_inf_pos <- which(x == -Inf)
+
+  # rescale
+  rng <- range(finite_x, na.rm = TRUE)
+  scaled_x <- (x - rng[1]) / (rng[2] - rng[1])
+
+  # correctly map -Inf and Inf values after scaling
+  scaled_x[minus_inf_pos] <- -1
+  scaled_x[inf_pos] <- 1
+
+  return(scaled_x)
+}
+
+# example test run from 10/27 notes
+x <- c(-Inf, -10, 0, 10, Inf)
+rescale01(x)
+
+```
+
+## 5
+
+Write your own functions to compute the variance and skewness of a numeric vector. You can look up the definitions on Wikipedia or elsewhere.
+
+```{r}
+# variance
+findVariance <- function(x) {
+  sum((x - mean(x))^2) / (length(x) - 1)
+}
+
+# skewness
+findSkewness <- function(x) {
+  n <- length(x)  
+  (n / ((n - 1)*(n - 2))) * sum(((x - mean(x)) / sqrt(findVariance(x))) ^3)
+}
+
+# test
+x <- c(1,2, 3, 4, 5)
+findVariance(x) # prints 2.5
+findSkewness(x) # prints 0
+
+```
+
+## 6
+
+Write `both_na()`, a summary function that takes two vectors of the same length and returns the number of positions that have an NA in both vectors.
+
+```{r}
+both_na <- function(x, y) {
+  if (length(x) == length(y)) {
+    sum(is.na(x) & is.na(y))
+  } else {
+    print("vectors are a different length")
+  }
+}
+
+# test
+x <- c(1, NA, 3, NA, 5, 6)
+y <- c(1, NA, 3, NA, NA, NA)
+both_na(x, y)  # prints 2, since index 2 and 4 are NA in both vectors 
+```
+
+## 7
+
+Read the documentation to figure out what the following functions do. Why are they useful even though they are so short?
+
+**is_directory: Uses file_info, which extracts info of a selected file. It's nice to wrap this in the function is_directory so it can specifically return a T/F bool value if it's a directory**
+
+**is_readable: Uses file.access to check info on file systems, such as permissions. This function passes in 'mode = 4' which test for read permissions.**
+
+```{r}
+is_directory <- function(x) {
+  file.info(x)$isdir
+}
+is_readable <- function(x) {
+  file.access(x, 4) == 0
+}
+?file.info
+?file.access
+```
+
+## 8 Optional
+
+This is an ungraded, optional question for those who want to master R. I'm happy to talk through it in office hours.
+
+Explain R's *lazy evaluation* of arguments in your own words and provide an example.
+
+-   Default arguments can be defined later
+
+**I would sum it up as: Function arguments aren't evaluated instantly in R as soon as the function is called, only when they're used directly.**
+
+```{r}
+f <- function(x) {
+  print("howdy!")
+  print(x)
+}
+#f(stop("error"))  # the line "howdy" in the function is printed first despite 'stop' forcing an error 
+```

@@ -1,0 +1,76 @@
+---
+title: "11-6-23-debugging-r"
+format: html
+editor: visual
+---
+
+\### Code from 9-6-23 Debugging discussion.
+
+```{r}
+step <- function(x, prob = 0.125){
+  
+  # make a slightly bigger matrix, so we don't have to worry about the boundaries.
+  nr2 = nrow(x) + 2
+  nc2 = ncol(x) + 2
+  x2 <- matrix(0, nrow = nr2, ncol = nc2)
+  infected <- which(x == 1, arr.ind = TRUE) + 1
+  ni <- nrow(infected)
+  
+  directions <- c(-1, 0, 1)
+  # Don't worry about cells that are already infected or removed
+  for(i in directions){
+    for(j in directions){
+      infect_ij <- infected
+      infect_ij[, "row"] <- infect_ij[, "row"] + i
+      infect_ij[, "col"] <- infect_ij[, "col"] + j
+      new_inf_rows <- sample(c(TRUE, FALSE), size = ni,
+                             prob = c(prob, 1-prob), replace = TRUE)
+      new_infect <- infect_ij[new_inf_rows, ]
+      browser() # <-- breakpoint; stop and open debugger exactly in this location
+      x2[new_infect] <- 1
+    }
+  }
+  
+  # Remove the edges from the too big matrix
+  result <- x2[-c(1, nr2), -c(1, nc2)]
+  
+  # Fix the cells that are already infected or removed
+  result[1 <= x] <- 2
+  result
+}
+
+# Reproduce the bug
+x <- matrix(0, nrow = 5, ncol = 8)
+x[c(1, 5), 8] <- 1
+
+# Seed the random number generator, which means the same sequence of random
+# numbers will be produced, so our results will be the same.
+set.seed(47)  # Pick an arbitrary number
+x2 <- step(x, prob = 0.2)
+image(t(x2), col = c("white", "red", "grey"))
+
+debug(step)
+```
+
+### Using the debugger: Step through your code.
+
+### During class, we highlighted x2 \<- step(x, prob = 0.2) after running debug(step) and looked at variables in the environment in the top right of the IDE
+
+```{r}
+# if you have no idea what's going on: 
+# step through the function, see if variables match
+
+debug(step) #turns on debugging mode for this function
+# undebug(step) # use this to turn off debugging mode
+
+# if you have some clue what's the problem:
+browser() # breakpoint; stop and open debugger on this line
+```
+
+## Important: you can call certain functions in terminal to debug.
+
+Example using the 1st code cell: Run the 1st cell w/ browser() before x2\[new_infect) and type in terminal:
+
+input: class(new_infect)\[1\] "numeric"
+
+output: debug at #21: x2\[new_infect\] \<- 1

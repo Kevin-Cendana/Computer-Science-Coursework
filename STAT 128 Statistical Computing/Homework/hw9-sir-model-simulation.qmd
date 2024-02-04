@@ -1,0 +1,202 @@
+---
+title: "hw9-SIR-model-simulation"
+author: "Kevin Cendana"
+format: 
+  html:
+    self-contained: true
+editor: visual
+---
+
+### Goals
+
+1.  Simulate and analyze results
+
+2.  Write while loops in R
+
+3.  Manipulate lists in R
+
+### Given: Step Function (not mine)
+
+```{r}
+step <- function(x, prob = 0.125){
+  
+  # make a slightly bigger matrix, so we don't have to worry about the boundaries.
+  nr2 = nrow(x) + 2
+  nc2 = ncol(x) + 2
+  x2 <- matrix(0, nrow = nr2, ncol = nc2)
+  infected <- which(x == 1, arr.ind = TRUE) + 1
+  ni <- nrow(infected)
+  
+  directions <- c(-1, 0, 1)
+  # Don't worry about cells that are already infected or removed
+  for(i in directions){
+    for(j in directions){
+      infect_ij <- infected
+      infect_ij[, "row"] <- infect_ij[, "row"] + i
+      infect_ij[, "col"] <- infect_ij[, "col"] + j
+      new_inf_rows <- sample(c(TRUE, FALSE), size = ni,
+                        prob = c(prob, 1-prob), replace = TRUE)
+      new_infect <- infect_ij[new_inf_rows, , drop = FALSE]
+      x2[new_infect] <- 1
+    }
+  }
+  
+  # Remove the edges from the too big matrix
+  result <- x2[-c(1, nr2), -c(1, nc2)]
+  
+  # Fix the cells that are already infected or removed
+  result[1 <= x] <- 2
+  result
+}
+```
+
+### 1
+
+Write a function to create a matrix with 1's (infections) in all 4 corners, and 0's everywhere else. The number of rows and number of columns should have default arguments set to 20 and 30.
+
+```{r}
+create_matrix <- function(rows = 20, cols = 30) {
+  # create matrix filled w/ 0s (default 20 rows, 30 cols)
+  mat <- matrix(0, nrow = rows, ncol = cols)
+  
+  # place 1's in each corner
+  mat[1, 1] <- 1          # top-left 
+  mat[1, cols] <- 1       # top-right 
+  mat[rows, 1] <- 1       # bottom-left 
+  mat[rows, cols] <- 1    # bottom-right 
+  
+  return(mat)
+}
+```
+
+### 2
+
+Write a function `simulate_sir` that accepts a probability of infection and an SIR matrix containing 0's, 1's, and 2's, representing Susceptible, Infected, and Removed. `simulate_sir` should iterate the model until no more cells are infected, and return a list containing the following:
+
+-   number of repetition until no more cells were infected
+
+-   probability of infection (same as the argument)
+
+-   proportion of cells ultimately infected
+
+-   final SIR matrix
+
+```{r}
+simulate_sir <- function(infection_prob, sir_matrix) {
+  # initialize the number of times to repeat
+  repetition <- 0
+  
+  # loop to get rid of all infections
+  while(any(sir_matrix == 1)) {
+    repetition <- repetition + 1
+    
+    # call step on the current SIR matrix w/ given probability
+    sir_matrix <- step(sir_matrix, prob = infection_prob)
+  }
+  
+  # calculate the proportion of cells that were infected
+  proportion_infected <- sum(sir_matrix == 2) / (nrow(sir_matrix) * ncol(sir_matrix))
+  
+  # return list w/ simulation results
+  return(list(
+    repetition = repetition,
+    probability = infection_prob,
+    proportion_infected = proportion_infected,
+    final_matrix = sir_matrix
+  ))
+}
+```
+
+### 3
+
+Starting with a 20 x 30 corner infected matrix, simulate from the above function at least 1000 times, and summarize all the resulting SIR matrices with one visualization. Which cells are most/least likely to be infected?
+
+It should take around 10 seconds for all of these simulations to run.
+
+```{r}
+library(tidyverse)
+# initialize summary matrix with zeros and a random probability
+ mat <- matrix(0, nrow = 20, ncol = 30)
+ probability <- 0.2 # testing w/ 20% infection rate
+
+# looping through all to run simulation
+for (i in 1:1000) {
+  initial_matrix <- create_matrix()
+  result <- simulate_sir(infection_prob = probability, sir_matrix = initial_matrix)
+  final_matrix <- result$final_matrix
+   mat <-  mat + (final_matrix == 2)
+}
+
+# normalize the summary matrix to get the proportion of times each cell was infected
+ mat <-  mat / 1000
+ 
+# convert the matrix to a data frame in a tidy format for ggplot
+summary_df <- as.data.frame(mat) %>%
+  rownames_to_column('Row') %>%
+  gather(key = 'Col', value = 'Frequency', -Row) %>%
+  mutate(Row = as.numeric(Row),
+         Col = as.numeric(sub("V", "", Col)))
+
+# create heat map 
+ggplot(summary_df, aes(x = Col, y = Row, fill = Frequency)) + 
+  geom_tile() + 
+  scale_fill_gradient(low = "white", high = "red") +
+  theme_minimal() +
+  labs(title = "heatmap: infection frequency", x = "col", y = "row", fill = "chance of infection")
+
+```
+
+### 4
+
+(Intentionally open ended)
+
+Simulate using `simulate_sir` at least 1000 times while varying the probability of infection and create a data frame with one row for every simulation, containing at least the following columns:
+
+-   number of repetition until no more cells were infected
+
+-   probability of infection
+
+-   proportion of cells ultimately infected
+
+How do these variables appear to be related? Visualize the relationship between them.
+
+```{r}
+library(tidyverse)
+
+# define infection prob & number of simulations for each prob
+prob_range <- seq(0.01, 0.5, by = 0.1)
+num_simulations <- 1000
+
+# initialize empty list to store results
+simulation_results_list <- list()
+
+# loop through each probability in range
+for (prob in prob_range) {
+  for (idx in 1:num_simulations) {
+    initial_matrix <- create_matrix()  # create matrix w/ infected corners
+    result <- simulate_sir(prob, initial_matrix)  # infect matrix
+    
+    # store results in list
+    simulation_results_list[[length(simulation_results_list) + 1]] <- c(result$repetition, prob, result$proportion_infected)
+  }
+}
+
+# convert the results into proper data frame to be displayed
+simulation_results <- do.call(rbind, simulation_results_list)
+colnames(simulation_results) <- c("repetition", "infection_prob", "infection_prop")
+simulation_results <- as.data.frame(simulation_results)
+simulation_results <- na.omit(simulation_results) 
+
+# plot
+# geom_jitter adds random noise to spread out points (was overplotted)
+ggplot(simulation_results, aes(x = infection_prob, y = infection_prop)) +
+  geom_point(aes(color = as.factor(repetition)), alpha = 0.6, size = 1.5) + 
+  theme_minimal() +
+  labs(title = "infection probability vs. proportion",
+       x = "infection proportion",
+       y = "infection proportion",
+       caption = "darker colors = fewer repetitions & faster infection") +
+  xlim(0, 1) + ylim(0, 1) +
+  scale_color_viridis_d(guide = 'none') # remove legend 
+
+```

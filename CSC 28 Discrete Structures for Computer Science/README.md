@@ -4,7 +4,7 @@
  
 Overall, this was my favorite class. It was very challenging, but I very much enjoyed the puzzle solving aspect of it. I even started doing little Leetcode challenges (trying to find the most efficent ways to solve a coding problem) for fun. This is the CC equivalent of CS 28: Discrete Structures for Computer Science
  
- Some topics covered: 
+## Topics
  
  - CS1 Review (Basic code such as variables, conditionals, loops, arrays, functions, etc)
  - CS2 Review (Pointers, Classes, Polymorphism, Inheritance, Encapsulation, Exceptions, Recursion, Templates, etc)

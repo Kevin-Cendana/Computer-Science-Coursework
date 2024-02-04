@@ -1,0 +1,147 @@
+---
+title: "9-20-control-flow"
+author: "Kevin Cendana"
+format: html
+editor: visual
+---
+
+# Control Flow: if, else
+
+```{r}
+x <- 0
+if (x > 0) {             # condition
+  print("x is positive") # body of the if statement
+} else if (x < 0) {
+  print("x is negative")
+} else {
+  print("x is zero")
+}
+
+# function 
+double <- function(x) {
+  2*x
+}
+double(15)
+
+# function of abs(x) that uses if else
+newAbs <- function(x) {
+  if (x < 0) {
+    -x  # prof advises not to use return
+  } else {
+    x
+  }
+}
+
+newAbs(1)
+newAbs(10)
+newAbs(0)
+newAbs(-2)
+newAbs(-8)
+newAbs(-5)
+```
+
+### NA
+
+```{r}
+# NA represents statistical missing values in R
+# It is a very special value and unique to R (similar to NULL but not NONE)
+
+a <- c(0, NA, 10, 5) # df with NA
+NA + 10 # result is still NA
+
+# make a prediction on what each line prints
+-3 * NA # prints NA
+mean(a, na.rm = TRUE) # 5
+mean (a, na.rm = FALSE) # NA
+NA == NA # prints NA since we're comparing 2 unknown values
+NA == "NA" # prints NA since we don't know if the string is NA 
+
+if (is.na(a[2])) {
+  print ("was NA")
+}
+
+# using "== NA" is a mistake
+# you need to use is.na()
+
+is.na(a) # works on single numbers and vectors
+```
+
+INF
+
+```{r}
+Inf + 1 # still infinity
+
+# exercises: predict what these run
+2 * Inf  #inf
+-5 * Inf #-inf
+1/0      # inf
+1/Inf    # 0
+
+b <- c(Inf, 3, -5)
+b == Inf # true false false
+
+# Replace Inf with 100 in b
+b [b == Inf] <- 100
+max(b)
+```
+
+### 9-23 Review:
+
+```{r}
+# Represents infinity
+Inf
+1/0
+
+# NA: statistical missing value
+x <- c(0, 1, NA, 20)
+
+0/0 # NaN (not a number) represents an undefined num calculation
+
+a <- NaN 
+a == 10 # prints NA
+
+# Computations w/ NaN will return NaN or NA (they're considered =)
+x <- c(25, Inf, NA, NaN)
+
+# Correct ways to check using vectorized functions (loops through all)
+# [25, Inf, NA, NaN]
+is.na(x) # false, false, true, true
+is.nan(x) # false, false, false, true
+is.infinite(x)  # false, true, false, false (assume NaN/NA != Inf)
+```
+
+```{r}
+f <- function() {
+  # TODO fill this in
+  # doesn't return anything
+}
+
+# In R, the value of every expression is an object
+# This is always guaranteed to work (assuming f doesn't cause error)
+b <- f() # NULL, placeholder for functions w/ undefined return value
+d <- logical(0)
+d2 <- c(TRUE, TRUE, FALSE, NA)
+d3 <- TRUE
+d4 <- c(TRUE)
+
+# R has vectors of length 1, no scalars
+length(d3)
+length(d4)
+
+# NA, or NaN, or Inf?
+
+# write.csv writes the R data frame iris into iris.csv
+e <- write.csv(iris, "iris.csv")
+
+# Test for NULL
+NULL == e
+is.null(e)
+
+is.na(x)
+
+# What will be the length of this result?
+is.null(x) # Length 1, which shows is.null is not vectorized like other is.(...) functions
+
+c(NULL, 10, 20, NULL, NULL, 5) 
+c(10,20,5) # exact same thing
+```

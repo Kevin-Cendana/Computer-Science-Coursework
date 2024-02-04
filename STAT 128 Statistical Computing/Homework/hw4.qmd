@@ -1,0 +1,173 @@
+---
+title: "hw4 stat128"
+author: "Kevin Cendana"
+format: 
+  html:
+    self-contained: true
+editor: visual
+---
+
+```{r, message=FALSE}
+library(tidyverse)
+library(dplyr)
+```
+
+## 1 Warm Up
+
+#### 1. How many rows and columns are in the river temperature data?
+
+```{r}
+# resubmission edit: forgot to exclude the first roow
+# 172,645 rows (excluding the first), 7 columns
+riverTemp <- read.delim('waterServices.txt', comment = '#')
+riverTemp <- slice(riverTemp, -1)
+num_rows <- nrow(riverTemp)
+num_cols <- ncol(riverTemp)
+cat("# of rows:", num_rows, "\n")
+cat("# of columns:", num_cols, "\n")
+head(riverTemp)
+```
+
+#### 2. What does an observation represent?
+
+```{r}
+# An agency's recording of water temp at a certain time
+
+# columns: agency, site number, datatime, timezone, temp, approval
+```
+
+#### 3. Clean up the data.
+
+Create a data frame called `water` containing three columns:
+
+1.  `datetime` that represents a moment in time
+2.  `temperature` that represents the water temperature in degrees Fahrenheit (not Celsius)
+3.  `qual` referring to the data qualification status from the USGS, as described in their [Tab-delimited output-format description](https://waterdata.usgs.gov/nwis/?tab_delimited_format_info):
+
+```         
+   # Data-value qualification codes included in this output: 
+   #     A  Approved for publication -- Processing and review completed.  
+   #     P  Provisional data subject to revision.  
+   #     e  Value has been estimated.  
+```
+
+*Hint: the row starting with `5s` is a problem.*
+
+```{r}
+#resubmission edit: my bad, didn't mean to print 100k rows 😭
+water <- riverTemp |>
+  select(datetime = 3, # select respective columns
+         temperature = 5, 
+         qual = 6) |>
+  slice(-1) # remove the weird 1st row
+
+head(water)
+```
+
+#### 4. What time span does the data cover? Is it complete?
+
+```{r}
+# Timespan: Sep 22, 2018 - September 21, 2023
+# The data doesn't seem complete judging from the gaps (mostly 0's, few 1's)
+
+earliest_date <- min(water$datetime, na.rm = TRUE) 
+latest_date <- max(water$datetime, na.rm = TRUE)
+print(paste("earliest date:", earliest_date))
+print(paste("latest date:", latest_date))
+# water
+
+water$date_only <- as.Date(water$datetime) # cast datetime to Date type
+d <- diff(water$date_only) # find gaps in data
+head(d, n = 200) # limit to 200 rows (but they're side by side so it shouldn't be too much)
+
+```
+
+## 2 Plots
+
+Answer each of the following questions with a plot and a brief explanation.
+
+#### 1. Plot a time series of the entire data set.
+
+Add at least one annotation (using `annotate()`)for a notable event. Avoid overplotting!
+
+```{r}
+# extract date and temp for event to annotate
+water$temperature <- as.numeric(water$temperature) # convert temp to num
+event_date <- as.Date("2021-06-01") # annotate drought (i looked this up)
+event_temp <- mean(subset(water, date_only == as.Date("2021-06-01"))$temperature, na.rm = TRUE) # take average temperature of drought day 
+
+#plot
+ggplot(water, aes(x=date_only, y=temperature)) +
+  geom_line() + # y axis in intervals of 1 
+  labs(title="riverTemp Data", x="date", y="temperature") +
+  theme_minimal() +
+  annotate("text", x=event_date, y=event_temp, label="Drought", vjust=-3, color ="red") +
+  scale_y_continuous(breaks=seq(floor(min(water$temperature)), ceiling(max(water$temperature)), by=1))
+```
+
+#### 2. Is 2023 warmer or colder than previous years?
+
+```{r}
+# The average temp of 2023 is the coldest year recorded so far
+
+# get the avg of all years and compare to 2023
+avg_temps <- water|>
+  group_by(year = lubridate::year(date_only)) |>
+  summarize(avg_temp = mean(temperature, na.rm = TRUE))
+
+# plot
+ggplot(avg_temps, aes(x=year, y=avg_temp)) +
+  geom_line(group=1) +
+  geom_point() +
+  labs(title="average temperature of each year", x="year", y="avg temp") +
+  theme_minimal()
+
+```
+
+#### 3. During which months is the American River dangerously cold?
+
+Reference facts from the [Cold Water Hazards and Safety](https://www.weather.gov/safety/coldwater) provided by the National Weather Service, or another reputable source.
+
+```{r}
+# Looking at the graphs from earlier, looks like around february-march is when the river is consistently colder
+```
+
+#### 4. Plot a time series of the most recent week in the data.
+
+```{r}
+# get latest date and filter for latest week
+latest_date <- max(water$date_only, na.rm = TRUE)
+recent_week_data <- water |>
+  filter(date_only > latest_date - 7 & date_only <= latest_date)
+
+# plot
+ggplot(recent_week_data, aes(x=as.factor(date_only), y=temperature)) +
+  geom_boxplot() +
+  labs(title="temperature for most recent week", x="date", y="temperature") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+#### 5. Come up with your own question and plot for this data.
+
+```{r}
+# Question: "How does the monthly average temperature vary between every year?"
+
+monthly_avg <- water |>
+  group_by(year = year(date_only), month = month(date_only, label = TRUE)) |>
+  summarize(avg_temp = mean(temperature, na.rm = TRUE), .groups = "drop")
+
+# get first month of every year (x-axis for every month of each year was too cluttered)
+january <- monthly_avg |>
+  filter(month == "Jan") |>
+  pull(year) |>
+  sort()
+
+#plot
+ggplot(monthly_avg, aes(x=interaction(year, month, sep="-"), y=avg_temp, group=year, color=as.factor(year))) +
+  geom_line() +
+  geom_point() +
+  scale_x_discrete(breaks = NULL, labels = NULL) +  
+  labs(title="monthly average temperature each year", x="year", y="average temperature", color="year") +
+  theme_minimal() 
+```

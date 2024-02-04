@@ -1,0 +1,138 @@
+---
+title: "10-17-23-Simulation-Example"
+author: "Kevin Cendana"
+format: html
+editor: visual
+---
+
+# Goal: Write S3 methods, lapply
+
+## S3 Methods:
+
+```{r}
+x = matrix(0, nrow = 3, ncol = 5)
+
+# class - says how the object behaves
+class(x)
+
+x2 = x
+x2[1.1] = 1
+
+class(x2)
+
+x3 = x2 + x2
+class(x3)
+
+# NOT the SIR plot
+plot(x)
+
+# put the new class in front of the existing classes
+# classes
+class(x2) = c("SIRmatrix", class(x2))
+
+# [1] "SIRmatrix "matrix "array"
+# most specific.. to... least specific
+class(x2)
+
+# When R looks for a method to use, it uses the most specific one that it finds
+# All s3 methods for plot:
+
+# defined a NEW s3 method for matrix plotting
+# class(x) contains "matrix"
+# then this matrix is used.
+plot.matrix = function(x, ...) { # remember: '...' allows any parameter
+  plot(x)
+}
+
+plot(x)
+class(x)
+
+plot.SIRmatrix = function(x) {
+  image(x)
+}
+
+# Call it directly: 
+plot.SIRmatrix(x2)
+class(x2)
+
+# What will I see?
+# Is it going to use plot.SIRmatrix or plot.matrix?
+plot(x2) # uses plot.SIRmatrix since it's the most specific class for x2
+class(x)
+plot(x) # using plot.matrix since the class of 'x' is not SIRmatrix
+
+# plotting method for SIRmatrix
+plot.SIRmatrix = function(x) {
+  image(x)
+}
+
+# write a summary method and call
+summary.SIRmatrix = function(x) {
+ list(n_infected = sum(x == 1), dim = dim(x)) 
+}
+
+summary(x2)
+
+# if you're going to define methods in R, the 1st ones to write are: 
+# plot() and summary(), as these are most common & users are familiar
+```
+
+# lapply:
+
+# list apply a function to return a list
+
+```{r}
+x = list (1, 1:2, 1:3, 1:4)
+x
+
+x[[1]][[1]]
+
+# Suppose I want the last element for every element in x
+c(1,2,3,4)
+
+getlast <- function(y) {
+  # return the last element from y
+  y[length(y)]
+}
+z = 1:10
+getlast(z)
+
+x = list (1,1:2,1:4,1:8,1:16)
+x 
+
+
+# Want to get the last element from every element of x
+# There has to be a better way...
+c(getlast(x[[1]]),
+  getlast(x[[2]]),
+  getlast(x[[3]]),
+  getlast(x[[4]]),
+  getlast(x[[5]])
+  )
+
+# Better way: use lapply! (listapply)
+lapply(x,getlast)
+
+# Convert to a vector
+unlist(lapply(x,getlast))
+
+# Simplify 
+sapply(x,getlast)
+
+# What kind of arguments does lapply accept?
+# x is a list
+# FUN is a function
+
+y = list(1:2, 1:4, 1:8, 1:16)
+
+# Task: Use sapply to get the 2nd element from each element of y
+get2 = function(z) z[2]
+sapply(y, get2)
+
+# Another way:
+apply(y, '[', 2)
+y[2]
+
+# Same as:
+'['(y,2) # Oddly, '['is just another function, the backticks identify it
+```

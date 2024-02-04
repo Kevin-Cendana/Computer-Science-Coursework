@@ -1,0 +1,93 @@
+---
+title: "Class_Functions"
+format: html
+editor: visual
+---
+
+```{r}
+# Goals:
+# 1. define vocabulary for functions
+# 2. identify repetition and rewrite as a function
+
+library(tidyverse)
+
+# read_water_sensor2 is the var for the function
+read_water_sensor2 <- function(fname){
+  if (fname == "") {
+    fname = "usgs.txt"
+  }
+  water_raw <- read_tsv(fname, comment = "#")
+  
+  water <- water_raw |>
+    slice(-1) |>
+    select(3, 5, 6) 
+  
+  colnames(water) <- c("datetime", "temp_cel", "qual")
+  
+  water <- water |>
+    mutate(datetime = ymd_hm(datetime),
+           temp_far = as.double(temp_cel)*(9/5) + 32) |>
+    mutate(hour = hour(datetime) + minute(datetime) / 60)
+  return(water)
+}
+# Identify the following in the code above.
+# function, parameter, argument, function call, body, return value
+```
+
+## Function Basics
+
+```{r}
+# example function:
+f <- function(parameter1, parameter2) {
+  
+}
+
+# example function (no arguments)
+f <- function() {
+  x = 500
+  z = 20
+  100 # don't need return statement
+}
+f
+```
+
+## Practice - Turn each code snippet into functions.
+
+```{r}
+#- give them descriptive names
+#- use an appropriate number of parameters
+#- verify that they work
+
+# What does this do?
+a <- rnorm(5) # generates 5 random numbers from a normal distribution
+a <- (a - min(a, na.rm = TRUE)) / (max(a, na.rm = TRUE) - min(a, na.rm = TRUE))
+# a - (minimum of a) / (highest a) - (lowest a)
+
+# Rewrite
+max(a) - min(a)
+(a - min(a)) # min is now = 0, max = 1
+```
+
+```{r}
+# SOMETHING is wrong with this code. What? Be careful copy pasting.
+a <- (a - min(a, na.rm = TRUE)) / (max(a, na.rm = TRUE) - min(a, na.rm = TRUE))
+b <- (b - min(b, na.rm = TRUE)) / (max(b, na.rm = TRUE) - min(a, na.rm = TRUE))
+c <- (c - min(c, na.rm = TRUE)) / (max(c, na.rm = TRUE) - min(c, na.rm = TRUE))
+
+# Rewrite it as a function.
+rescale <- function(x) {
+  (x - min(a, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+}
+
+# An improvement. Nice and neat, avoids code repetition
+a <- rescale(a)
+b <- rescale(b)
+c <- rescale(c)
+```
+
+## A little preview of a future function....
+
+```{r}
+abc = list(a,b,c)
+abc2 = lapply(abc, rescale) # list apply; calls func for each element in list
+```

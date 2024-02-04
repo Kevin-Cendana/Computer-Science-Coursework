@@ -1,0 +1,52 @@
+---
+title: "midterm-practice"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+employment <- read_csv("../Downloads/Employment Projections.csv")
+
+spec(employment)
+```
+
+What does a row represent? One occupation.
+
+What's the first occupation?
+
+create a new data set where we have the title, 2022 employment, median wages. and 2032 employment
+
+Make these the columns: title, emp22, med_wages, emp32
+
+```{r}
+#backticks ` ` or "" will work here
+emp <- select(employment,
+              title = "Occupation Title",
+              emp22 = "Employment 2022",
+              emp32 = "Employment 2032",midte
+              med_wages = "Median Annual Wage 2022")
+```
+
+Column Types?
+
+```{r}
+emp <- mutate(emp, 
+              med_wages = parse_double(med_wages))
+```
+
+plot!
+
+```{r}
+ggplot(emp, aes(x = emp22, y = emp32)) + geom_point()
+```
+
+Which are the professions in 2022?
+
+```{r}
+top6 <- emp22 |> arrange(desc(emp22)) |> head() 
+```
+
+```{r}
+ggplot(top6, aes(factor(title), emp22)) + geom_bar(stat = "identity")
+```

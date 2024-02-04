@@ -1,0 +1,19 @@
+---
+title: "hw10"
+author: "Kevin Cendana"
+format: 
+  html:
+    self-contained: true
+editor: visual
+---
+
+```{r}
+devtools::load_all()
+test_matrix <- create_matrix()
+test_step <- step(test_matrix, prob = 0.125)
+print(test_step)
+print(class(test_step))  # Should include "SIRmatrix"
+simulation_result <- simulate_sir(0.1, test_matrix)
+print(simulation_result)
+
+```

@@ -1,0 +1,186 @@
+---
+title: "hw5"
+author: "Kevin Cendana"
+format: 
+  html:
+    self-contained: true
+editor: visual
+---
+
+```{r, message=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(lubridate)
+library(dplyr)
+
+read_water_sensor <- function(fname){
+  water_raw <- read_tsv(fname, comment = "#")
+  
+  water <- water_raw |>
+    slice(-1) |>
+    select(3, 5, 6) 
+  
+  colnames(water) <- c("datetime", "temp_cel", "qual")
+  
+  water <- water |>
+    mutate(datetime = ymd_hm(datetime),
+           temp_far = as.double(temp_cel)*(9/5) + 32)
+  return(water)
+}
+
+```
+
+Read in the data provided in Canvas using the function above.
+
+```{r}
+water_data <- read_water_sensor('sep2023-1.txt')
+```
+
+#### 1. Which data points are missing?
+
+Hint: The data is missing in more than 1 place.
+
+```{r}
+# A big gap on 9/19, smaller gap on 9/21, another tiny gap on 9/19
+
+# plot (check if there's a large visible gap)
+ggplot(water_data, aes(x = datetime, y = temp_cel)) +
+  geom_point() +
+  labs(title = "temperature over time",
+       x = "date",
+       y = "temperature") 
+
+# get time diff b/t rows and then filter out rows w/ 15 min gaps
+water_data <- water_data |>
+  arrange(datetime) |>
+  mutate(time_difference = lead(datetime) - datetime)
+gaps <- water_data |>
+  filter(!is.na(time_difference) & time_difference > minutes(15))
+print(gaps)
+```
+
+#### 2. Estimate the missing data, and provide a complete mathematical description of the fitted model you used.
+
+```{r}
+
+# extract data
+water_data <- mutate(water_data, hour = hour(datetime) + 
+                  minute(datetime)/60)
+
+# 24-hour period for the sine wave
+d = 2*pi/24
+
+# create sin and cosine terms based on hours
+water_data <- mutate(water_data, sinterm = sin(hour*d), costerm = cos(hour*d))
+
+# fit a linear model using the sine and cosine terms
+fit <- lm(temp_cel ~ sinterm + costerm, data = water_data)
+coef(fit)
+
+# predict temperatures using the model that was fit
+estimated_temps <- predict(fit, newdata = water_data)
+
+# identify gaps where data is missing
+alltimes <- seq(from = min(water_data$datetime), to = max(water_data$datetime), by = "15 min")
+missing_times <- setdiff(alltimes, water_data$datetime)
+
+
+# create the sine and cosine terms for missing_times
+missing_data <- tibble(datetime = missing_times)
+missing_data <- mutate(missing_data, 
+                       hour = hour(datetime) + minute(datetime)/60,
+                       sinterm = sin(hour*d),
+                       costerm = cos(hour*d))
+
+# estimate the temperature for missing times using linear model, store
+estimated_missing_temps <- predict(fit, newdata = missing_data)
+missing_data_estimate <- tibble(datetime = missing_times, temp_cel = estimated_missing_temps)
+
+# make sure the datetime columns match in type (got a type mismatch error for temp_cel last time)
+missing_data_estimate$datetime <- as.POSIXct(missing_data_estimate$datetime)
+
+# same as above, ensure the temp_cel columns match in type
+water_data$temp_cel <- as.double(water_data$temp_cel)
+missing_data_estimate$temp_cel <- as.double(missing_data_estimate$temp_cel)
+
+# combine the original data with the estimated missing data
+complete_data <- bind_rows(water_data, missing_data_estimate)
+
+```
+
+TODO - modify the following to represent the model you used
+
+\*\*Edit for resubmission: Fixed LaTex equation. Using /text{} doesn't work in html
+
+$$
+tempcel = \alpha + \beta \sin(d \cdot hour) + \gamma \cos(d \cdot hour)
+$$ where
+
+-   $\alpha$ represents base temperature and intercept
+
+-   $\beta$ represents amplitude of the sine term
+
+-   $\gamma$ represents amplitude of the cosine term
+
+The fitted parameters are $a = ~19$, $b = -1.3$, $\gamma$ = .18
+
+#### 3. Plot the data, the estimates, and the fitted model.
+
+Make it visually clear in the plot which are actual data points and which are estimates.
+
+```{r}
+# plot the actual data
+plot <- ggplot(water_data, aes(x=datetime, y=temp_cel)) + 
+  geom_point(aes(color = "actual data"), size = .7) +  
+  
+# plot the missing data
+  geom_point(data = missing_data_estimate, aes(y = temp_cel, color = "missing data (estimate)")) + 
+  
+# plot the fitted model
+  geom_line(aes(y = estimated_temps, color = "fitted model"), size = 1.2) +  
+  labs(title = "temperature over time", 
+       x = "date", 
+       y = "temp", 
+       color = "legend") + 
+  theme_minimal()
+
+plot
+
+```
+
+Explain your plot.
+
+#### 4. How well did the estimates work?
+
+Download the [complete data](https://waterdata.usgs.gov/monitoring-location/11446980/#parameterCode=00010&period=P7D&showMedian=true) from USGS, and compare the estimates with the actual data points.
+
+\*\*Edit for resubmission: overlay complete data from link over the original plot and make more complete answer
+
+```{r}
+
+# The estimates were off by a bit, but otherwise pretty close! The peak and trough points are the ones that are off the most, following the pattern we've seen so far.
+
+water_data2 <- read_water_sensor('actual_data_sep2023-1.txt')
+
+# apply the same transformations we made to our original incomplete data
+water_data2 <- water_data2 |>
+  mutate(hour = hour(datetime) + minute(datetime)/60,
+         sinterm = sin(hour * d),
+         costerm = cos(hour * d),
+         temp_cel = as.double(temp_cel))
+
+# create the plot with the estimates of missing data from water_data & add the actual data from water_data2. 
+# also, make sure to use scale_x_datetime because the new data has to be downloaded in a set of 30 days instead of 7 to get sep 19
+plot <- ggplot(water_data, aes(x=datetime, y=temp_cel)) + 
+  geom_point(data = missing_data_estimate, aes(y = temp_cel, color = "estimate of missing data")) + 
+  geom_point(data = water_data2, aes(y = temp_cel, color = "complete official data"), size = .7) + labs(title = "temperature over time", 
+       x = "data", 
+       y = "temperature", 
+       color = "data source") + 
+  theme_minimal() +
+  scale_x_datetime(limits = c(as.POSIXct("2023-09-19"), max(water_data$datetime, na.rm = TRUE)))
+
+
+plot
+
+```

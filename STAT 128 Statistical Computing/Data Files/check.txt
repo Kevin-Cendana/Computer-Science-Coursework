@@ -1,0 +1,103 @@
+══ Documenting ═════════════════════════════════════════════════════════════════════════════════════════
+ℹ Updating SIR documentationWarning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'ℹ Loading SIRWarning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'
+══ Building ════════════════════════════════════════════════════════════════════════════════════════════
+Setting env vars:
+• CFLAGS    : -Wall -pedantic -fdiagnostics-color=always
+• CXXFLAGS  : -Wall -pedantic -fdiagnostics-color=always
+• CXX11FLAGS: -Wall -pedantic -fdiagnostics-color=always
+• CXX14FLAGS: -Wall -pedantic -fdiagnostics-color=always
+• CXX17FLAGS: -Wall -pedantic -fdiagnostics-color=always
+• CXX20FLAGS: -Wall -pedantic -fdiagnostics-color=always
+Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'Warning: incomplete final line found on '/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION'── R CMD build ─────────────────────────────────────────────────────────────────────────────────────────
+✔  checking for file ‘/Users/home/Desktop/Workspace/STAT 128 Statistical Computing/SIR/DESCRIPTION’ ...
+─  preparing ‘SIR’:
+✔  checking DESCRIPTION meta-information
+─  checking for LF line-endings in source and make files and shell scripts
+─  checking for empty or unneeded directories
+─  building ‘SIR_0.0.0.9000.tar.gz’
+   
+══ Checking ════════════════════════════════════════════════════════════════════════════════════════════
+Setting env vars:
+• _R_CHECK_CRAN_INCOMING_REMOTE_               : FALSE
+• _R_CHECK_CRAN_INCOMING_                      : FALSE
+• _R_CHECK_FORCE_SUGGESTS_                     : FALSE
+• _R_CHECK_PACKAGES_USED_IGNORE_UNUSED_IMPORTS_: FALSE
+• NOT_CRAN                                     : true
+── R CMD check ─────────────────────────────────────────────────────────────────────────────────────────
+─  using log directory ‘/private/var/folders/89/lcfqp1fd2hn0qzdgwmz6hfk40000gn/T/Rtmp0x0UOk/file46ee60cdda96/SIR.Rcheck’ (356ms)
+─  using R version 4.3.1 (2023-06-16)
+─  using platform: x86_64-apple-darwin20 (64-bit)
+─  R was compiled by
+       Apple clang version 14.0.3 (clang-1403.0.22.14.1)
+       GNU Fortran (GCC) 12.2.0
+─  running under: macOS Ventura 13.5.1
+─  using session charset: UTF-8
+─  using options ‘--no-manual --as-cran’
+✔  checking for file ‘SIR/DESCRIPTION’
+─  this is package ‘SIR’ version ‘0.0.0.9000’
+─  package encoding: UTF-8
+✔  checking package namespace information
+✔  checking package dependencies (540ms)
+✔  checking if this is a source package
+✔  checking if there is a namespace
+✔  checking for executable files ...
+✔  checking for hidden files and directories
+✔  checking for portable file names
+✔  checking for sufficient/correct file permissions
+✔  checking serialization versions
+✔  checking whether package ‘SIR’ can be installed (1.5s)
+✔  checking installed package size
+✔  checking package directory
+✔  checking for future file timestamps ...
+W  checking DESCRIPTION meta-information ...
+   Invalid license file pointers: LICENSE
+✔  checking top-level files
+✔  checking for left-over files
+✔  checking index information
+✔  checking package subdirectories ...
+✔  checking R files for non-ASCII characters ...
+✔  checking R files for syntax errors ...
+✔  checking whether the package can be loaded ...
+✔  checking whether the package can be loaded with stated dependencies ...
+✔  checking whether the package can be unloaded cleanly ...
+✔  checking whether the namespace can be loaded with stated dependencies ...
+✔  checking whether the namespace can be unloaded cleanly ...
+✔  checking dependencies in R code (383ms)
+✔  checking S3 generic/method consistency ...
+✔  checking replacement functions ...
+✔  checking foreign function calls ...
+✔  checking R code for possible problems (3s)
+✔  checking Rd files ...
+✔  checking Rd metadata ...
+✔  checking Rd line widths ...
+✔  checking Rd cross-references ...
+✔  checking for missing documentation entries ...
+✔  checking for code/documentation mismatches (590ms)
+✔  checking Rd \usage sections (524ms)
+✔  checking Rd contents ...
+✔  checking for unstated dependencies in examples ...
+W  checking files in ‘vignettes’
+   Files in the 'vignettes' directory but no files in 'inst/doc':
+     ‘SIR_vignette.Rmd’ ‘SIR_vignette.html’
+   Package has no Sweave vignette sources and no VignetteBuilder field.
+─  checking examples ... NONE
+✔  checking for non-standard things in the check directory
+✔  checking for detritus in the temp directory
+   
+   See
+     ‘/private/var/folders/89/lcfqp1fd2hn0qzdgwmz6hfk40000gn/T/Rtmp0x0UOk/file46ee60cdda96/SIR.Rcheck/00check.log’
+   for details.
+   
+   
+── R CMD check results ───────────────────────────────────────────────────────────── SIR 0.0.0.9000 ────
+Duration: 11.4s
+
+❯ checking DESCRIPTION meta-information ... WARNING
+  Invalid license file pointers: LICENSE
+
+❯ checking files in ‘vignettes’ ... WARNING
+  Files in the 'vignettes' directory but no files in 'inst/doc':
+    ‘SIR_vignette.Rmd’ ‘SIR_vignette.html’
+  Package has no Sweave vignette sources and no VignetteBuilder field.
+
+0 errors ✔ | 2 warnings ✖ | 0 notes ✔

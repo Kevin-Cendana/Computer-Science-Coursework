@@ -1,0 +1,5 @@
+"This is testingFile.txt! If you're reading this, it has been read correctly. It has 3 additional lines:
+testFile Line 1
+testFile Line 2
+testFile Line 3
+That's all! Bye!"

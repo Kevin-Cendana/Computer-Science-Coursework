@@ -1,0 +1,164 @@
+---
+title: "STAT 128 HW 2 Data Transformation"
+format: html
+editor: visual
+---
+
+### **Questions**
+
+### **1**
+
+**Tweak each of the following R commands so that they run correctly:**
+
+```{r}
+library(nycflights13)
+library(tidyverse)
+ggplot(data = mpg, aes(x = displ, y = hwy)) + 
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+### **2**
+
+1.  **Explain R's argument matching rules in your own words using examples with the `seq()` function.**
+
+    Arguments are matched by, in order of priority: name -\> name abbreviations (ex. 'fr' instead of 'from') -\> position -\> default value
+
+    ```{r}
+    seq(from = 1, to = 5, by = 1) # names
+    seq(f = 1, t = 5,  b = 1) # name abbreviations
+    seq(1, 5, by = 1) # both position and name (correct order)
+    seq(by = 1, 1, 5) # 'by' name is in the wrong parameter order but it's prioritized first, and the rest are in the right order, still works
+    seq(1,5,1) # position only, no names needed
+    seq(1,5) # position only, 'by' is 1 by default
+    ```
+
+2.  **Which parameters are the arguments matched to in this function call? `seq(3, length.out = 10, 6)`**
+
+    from = 3, length.out = 10, to = 6
+
+### **3**
+
+**The following questions refer to the `flights`data frame in `nycflights13`package.**
+
+1.  **In a single pipeline for each condition, find all flights that meet the condition:**
+
+    -   **Had an arrival delay of two or more hours**
+
+    ```{r}
+    flights |> filter(arr_delay >= 120)
+    ```
+
+    -   **Flew to Houston (`IAH` or `HOU`)**
+
+    ```{r}
+    flights |> filter(dest == "IAH" | dest == "HOU")
+    ```
+
+    -   **Were operated by United, American, or Delta**
+
+    ```{r}
+    flights |> filter(carrier == "UA" | carrier == "AA" | carrier == "DL")
+    ```
+
+    -   **Departed in summer (July, August, and September)**
+
+    ```{r}
+    flights |> filter(month %in% c(7,8,9))
+    ```
+
+    -   **Arrived more than two hours late, but didn't leave late**
+
+    ```{r}
+    flights |> filter (arr_delay > 120, dep_delay <= 0)
+    ```
+
+    -   **Were delayed by at least an hour, but made up over 30 minutes in flight**
+
+    ```{r}
+    flights |> filter (dep_delay >= 60, arr_delay < dep_delay - 30)
+    ```
+
+2.  **Sort `flights` to find the flights with longest departure delays. Find the flights that left earliest in the morning.**
+
+    ```{r}
+    flights |> arrange(desc(dep_delay)) 
+    flights |> arrange(desc(dep_time))
+    ```
+
+3.  **Sort `flights` to find the fastest flights. (Hint: Try including a math calculation inside of your function.)**
+
+    ```{r}
+    flights |> mutate(speed = distance / air_time) |> arrange(speed)
+    ```
+
+4.  **Was there a flight on every day of 2013?**
+
+    ```{r}
+    flights |> group_by(year, month, day) |> summarize(n = n()) |> filter(n == 0)
+    ```
+
+5.  **Which flights traveled the farthest distance? Which traveled the least distance?**
+
+    ```{r}
+    flights |> arrange(desc(distance)) # farthest is flight 51
+    flights |> arrange(distance)       # shortest is flight 1632
+
+    ```
+
+6.  **Does it matter what order you used [`filter()`](https://dplyr.tidyverse.org/reference/filter.html) and [`arrange()`](https://dplyr.tidyverse.org/reference/arrange.html) if you're using both? Why/why not? Think about the results and how much work the functions would have to do.**
+
+    The order of filter() and arrange() shouldn't affect the final result, but there may be a difference in performance when filtering since it reduces the number of rows afterward, resulting in faster subsequent searches
+
+7.  **What happens if you specify the name of the same variable multiple times in a [`select()`](https://dplyr.tidyverse.org/reference/select.html) call?**
+
+    That same variable would appear multiple times in the same output.
+
+8.  **Rename `air_time` to `air_time_min` to indicate units of measurement and move it to the beginning of the data frame.**
+
+    ```{r}
+    flights |> rename(air_time_min = air_time) |> select(air_time_min, everything())
+    ```
+
+### **4**
+
+1.  **Which carrier has the worst average delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about `flights |> group_by(carrier, dest) |> summarize(n())`)**
+
+    ```{r}
+    flights |> group_by(carrier) |> summarize(avg_delay = mean(dep_delay, na.rm = TRUE)) |> arrange(desc(avg_delay))
+    ```
+
+    On average, it seems like carrier F9 has the longest delays, so it doesn't look like they're doing too hot.
+
+2.  **Find the flights that are most delayed upon departure from each destination.**
+
+    ```{r}
+    flights |> group_by(dest) |> filter(dep_delay == max(dep_delay, na.rm = TRUE))
+
+    ```
+
+3.  **How do delays vary over the course of the day. Illustrate your answer with a plot.**
+
+    ```{r}
+    flights |> ggplot(aes(x = sched_dep_time, y = dep_delay)) + geom_point()
+    ```
+
+    There seems to be much less delays at the very start and end of the days.
+
+4.  **What happens if you supply a negative `n` to [`slice_min()`](https://dplyr.tidyverse.org/reference/slice.html) and friends?**
+
+    It returns rows with the smallest values in descending order.
+
+5.  **Explain what [`count()`](https://dplyr.tidyverse.org/reference/count.html) does in terms of the dplyr verbs you just learned. What does the `sort` argument to [`count()`](https://dplyr.tidyverse.org/reference/count.html) do?\
+    **It seems like it just does group_by() into summarize().
+
+### **5**
+
+**Come up with and answer your own question regarding flights. Answer it using a pipeline with at least 3 steps.**
+
+Example question: Which month had the highest average departure delay?
+
+```{r}
+flights |> group_by(month) |> summarize(avg_delay = mean(dep_delay, na.rm = TRUE)) |> arrange(desc(avg_delay))
+
+```

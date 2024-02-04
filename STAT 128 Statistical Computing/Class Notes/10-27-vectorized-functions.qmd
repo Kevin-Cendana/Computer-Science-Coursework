@@ -1,0 +1,87 @@
+---
+title: "9-27-vectorized-functions"
+format: html
+editor: visual
+---
+
+## Goal: Use vectorized functions in R
+
+```{r}
+# vectorized functions operate on a whole vector at once
+x <- 1:10
+y <- sin(x)
+
+# sin() is an example of a vectorized function
+# it's equivalent to:
+n <- length(x)
+y2 <- rep(NA,n)
+
+# don't use this!
+# explicit looping equivalent to the vectorized way, messier and slower
+for (i in seq (n)) { 
+  y2[i] <- sin(x[i])
+}
+
+# is == vectorized?
+y == y2
+all(y == y2)
+
+# R is totally built around vectorized functions
+```
+
+# Birthday Question from HW7
+
+### General pattern to create functions:
+
+-   1\) define the result
+
+-   2\) modify the subsets as necessary result\[ ... \] \<- result\[ ... \]
+
+```{r}
+# Calculate someone's age today, given the birthday
+library(tidyverse)
+
+td <- today()
+
+# test driven development: come up with good test cases, then write function
+bd <- ymd(c("1986-06-06", 
+            "1996-11-11", 
+            "2006-10-31", 
+            "2016-10-26",
+            "2016-10-27"))
+2023 - 1986 # 37
+2023 - 1996 - 1 # 26, subtract 1 since our current month (october) isn't passed
+ages <- c(37,26,16,7,7)
+
+# making the function - start with something that's mostly right
+
+# 1) start simple: just subtract their bday year from current year
+result <- year(td) - year(bd)
+result 
+
+# 2) getting closer: if bday month is after current month, subtract 1
+month(td) < month(bd)
+result[month(td) < month(bd)] <- result[month(td) < month(bd)] - 1
+
+# 3) only niche cases left: 
+# handle bdays that are in the current month but day hasn't happened yet
+bday_after <- (month(td) == month(bd)) & day(td) < day(bd)
+result[bday_after] <- result[bday_after] - 1
+result
+ages
+```
+
+# Map Inf values from HW7
+
+```{r}
+# Wrong way:
+# Map infinite values to 0,1
+x <- c(-Inf, -10, 0, 10, Inf)
+x[x==Inf] <- 1
+# then rescale..
+
+# Right way:
+# filter out the infinities first
+# rescale
+# set infinities in result to 0,1
+```

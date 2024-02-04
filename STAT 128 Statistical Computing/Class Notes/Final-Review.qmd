@@ -1,0 +1,483 @@
+---
+title: "Personal-Final-Review"
+author: "Kevin Cendana"
+format: html
+editor: visual
+---
+
+### Functions
+
+```{r}
+# Basic Function (x is parameter, whatever passed in x is argument)
+addOne = function(x) {
+  x + 1
+}
+
+# Most R functions are vectorized meaning they work on the entire vector
+addOne(c(1,2,3)) # 2,3,4 (does not change arguments themselves btw)
+```
+
+```{r}
+# Wrapper Function: Greets user with an optional intro
+greet = function(..., intro = "Hello, ") {
+  intro_and_name <- paste(intro, ...)
+  print(intro_and_name)
+}
+greet("Kevin")
+greet("Kevin", "Cendana")
+greet("Kevin", intro = "Hi, ")
+```
+
+```{r}
+# LApply applies a function to every single index in a list/vector
+lengths = c(3,5)
+print(lapply(lengths, seq)) # prints 1 thru 3, 1 thru 5
+lengths # prints 3 5
+seq(lengths) # prints 1 2 3
+```
+
+### S3 Methods
+
+```{r}
+# S3 methods are a type of object-oriented programming in R that allows for different behaviors of a function depending on the class of the input object. 
+
+# ex) The "summary" function in R has different behaviors depending on the class of the input object. 
+#   - If the input is a numeric vector, it calculates the mean, median, & other summary stats.
+#   - If the input is a data frame, it will provide a summary of each column. 
+  
+# Define a new class "person" & make object of it
+setClass("person", slots = c(name = "character", age = "numeric"))
+person1 <- new("person", name = "Kevin", age = 25)
+
+# Define a summary method for objects of class "person"
+summary.person <- function(object) {
+  cat("Name:", object@name, "\n")
+  cat("Age:", object@age, "\n")
+}
+
+summary(person1)
+```
+
+## Data Frames - Understanding them using class()
+
+### Vector, Matrix, List, Data Frame
+
+```{r}
+# Vector
+x <- c(10,20,30)
+class(x) # prints "numeric vector"
+2*x # prints 20 40 60
+length(x) # prints 3
+```
+
+```{r}
+# Matrix
+y <- matrix(0, nrow = 3, ncol = 5) # make 3x5 matrix
+y[3,4] = 100 # 3rd row, 4th column is now 100
+y
+```
+
+```{r}
+# Lists (w/ lapply)
+lengths = c(8, 10, 3)
+seqs = lapply(lengths, seq) # lapply lets seq apply to every index in length
+seqs # prints 1-8, 1-10, 1-3
+```
+
+```{r}
+# Data Frames - Rows represent observations & columns represent variables
+# Below code works because y is recycled to be the same length as x. Recycling is generally safe and a good idea when one element is of length 1.
+d <- data.frame(x = c(1, 2, 3), y = TRUE) # df prints x = 1,2,3, y = true,true,true
+d 
+1:4 + 1:2 # TERRIBLE idea! prints '2 4 4 6'
+```
+
+### Coercion: - Converting data types to make them compatible when combined
+
+```{r}
+
+# Type Hierarchy Tier List: Logical < Integer < Numeric < Character
+
+# Logical
+# NA is logical & the most specific type AKA if mixed, changes to more general type
+class(NA) # prints 'logical'
+x <- c(NA, "hello")
+class(x[1])  # prints "character"
+
+# Integer
+# Integer is more specific than numeric
+x <- seq(5)  # Creates an integer sequence
+a <- 1.498   # This is a numeric value
+xa = x + a   # Combining integer with numeric results in numeric
+class(xa)    # Outputs "numeric"
+
+# Mixing types
+a = TRUE         # Logical (least general)
+b = 3L           # Integer
+c = 3.14         # Numeric
+d = "hello"      # Character (most general)
+class(d)         # Outputs "character"
+
+# Oh yeah and True = 1, False = 0.
+TRUE + TRUE + FALSE # prints 0
+class(TRUE + 1) # prints numeric, 1 is numeric by default
+class(TRUE + 1L) # prints integer, 1 is an integer here
+```
+
+# Midterm Review
+
+### Reading & Printing File
+
+```{r}
+library(tidyverse)
+
+# read file, print file, remove NA
+employment <- read_csv("employment.csv")
+names(employment)
+na.omit(emp)
+```
+
+### Plot
+
+```{r}
+# plotting (mneumonic: GGDAXY)
+ggplot(data = employment, aes(x = title, y = employ32)) +
+  geom_point() +
+  labs(title = "cool graph", x = "title", y = "employ32")
+
+# add any of these (1 each):
+  # graph type: geom_point/histogram/bar
+  # decorating: labs(title,x,y), geom_smooth/lines, theme(minimal)
+  # set limit: scale_x/y_continuous(limits = c(0, 100))
+```
+
+### Pipeline
+
+```{r}
+# Exact same as names(employment)
+employment |> names()
+
+# w/o pipeline
+  # 'filter()' is used to pick rows from 'employment' where the job title is 'Astronomers'.
+  data_filtered = filter(employment, title == "Astronomers")
+  # 'summarize()' calculates the average (mean) of the 'med_wage' col in the filtered data.
+  data_summarized = summarize(data_filtered, avg = mean(med_wage))
+
+# w/ pipeline (same as above)
+# It filters the data and then summarizes it in one go.
+data_summarized2 = employment |> filter(title == "Astronomers") |>
+  summarize(avg = mean(med_wage))
+# 'head()' shows the first few rows of the summarized data.
+head(data_summarized)
+
+```
+
+### Select, Deselect, Mutate, Rename
+
+```{r}
+# 'select()' is used to pick specific columns from 'employment'. Here, it selects 'title' and 'employ32'.
+new_df = employment |> select(title, employ32)
+
+# This line also uses 'select()', but the minus sign (-) means it's removing columns. It removes 'entry_educ' and 'onjob_training'.
+new_df = employment |> select(-entry_educ, -onjob_training)
+
+# 'mutate()' adds a new column or changes an existing one. Here, it creates 'all_employ' by adding 'employ22' and 'employ32'.
+employment |> mutate(all_employ = employ22 + employ32)
+
+# 'rename()' changes the name of a column. Here, it renames 'title' to 'new_title'.
+employment |> rename(new_title = title)
+
+```
+
+### Filter, Arrange
+
+```{r}
+# 'filter()' picks rows where the condition is true. Here, it selects rows where 'title' is 'Astronomers'.
+new_df |> filter(title == "Astronomers")
+
+# 'arrange()' sorts data. This line sorts 'employment' by 'title' in ascending order.
+employment |> arrange(title)
+
+# This is also 'arrange()', but 'desc()' sorts 'title' in descending order.
+employment |> arrange(desc(title))
+```
+
+### Group By
+
+```{r}
+# 'group_by()' groups data by a specific column, here 'category'. It doesn't change how data looks but affects calculations done after.
+data <- data.frame(
+  category = c("A", "A", "B", "B", "C", "C"),
+  value = c(10, 15, 20, 25, 30, 35))
+grouped_data <- data |> group_by(category)
+```
+
+### Pivot
+
+head(long_data)
+
+```{r}
+# 'pivot_longer()' changes the data format from wide to long. It splits columns into multiple rows.
+data <- data.frame(
+  product_A_2021 = 1,
+  product_A_2022 = 2,
+  product_B_2021 = 3,
+  product_B_2022 = 4
+)
+head(data) # Before
+
+# Here, 'pivot_longer()' splits each column name into 'product' and 'year', based on the pattern defined.
+long_data <- data |> pivot_longer(
+  cols = everything(),
+  names_to = c("product", "year"),
+  names_pattern = "product_(.)_(....)"
+)
+head(long_data) # After
+```
+
+### Modeling
+
+```{r}
+# First, we're using a linear model. Think of it like finding a trend line in a graph.
+# Here, I'm saying, "Hey, I want to predict the highway mileage (hwy) of a car
+# based on its engine size (displ) and its type (class) using the data from 'mpg' dataset."
+m1 <- lm(hwy ~ displ + class, data = mpg)
+
+# This part shows the result of our model.
+m1
+
+# Next, we're going to make a prediction using our model.
+# We create a new data frame with two cars, one with a 2-liter engine and compact class,
+# and another with a 3.5-liter engine and minivan class.
+ourcars <- data.frame(displ=c(2, 3.5), class=c("compact", "minivan"))
+
+# Now, we ask our model to predict the highway mileage for these two cars.
+predict(m1, ourcars)
+
+# The output will give us the predicted mileages for these cars.
+
+# Interpolation is like filling in missing pieces in a puzzle based on the surrounding pieces.
+
+# MSE, or Mean Squared Error, is a way to measure how good our model is.
+# The lower the MSE, the better our model.
+
+# Simulation is like running experiments on the computer.
+# 'set.seed' ensures that whenever we run our simulation, we get the same random numbers.
+# 'replicate' is like repeating an experiment many times to see different outcomes.
+
+```
+
+```{r}
+library(tidyverse)
+ev <- read_delim("electric_vehicle.txt", delim = "\t")
+head(ev)
+```
+
+## Midterm Questions
+
+```{r}
+library(tidyverse)
+# 1a. read data set from delimited text file
+emp <- read_delim("employment.csv", delim = ",") # read file
+emp <- emp[,-1] # remove 1st col (switch to (-1, ) for row)
+
+# 1b. convert col to proper type
+library(lubridate)
+#emp$date_column <- ymd_hms(emp$your_date_column)
+# emp <- mutate(emp, 
+#               med_wage = parse_double(med_wage))
+
+
+# 1c. rename col to be easier to work with
+names(emp)
+emp <- emp |>
+  rename(
+    # dummy_col = "...1",
+    job_title = "title",
+    employment_2022 = "employ22",
+    employment_2032 = "employ32",
+    median_wage = "med_wage",
+    education_required = "entry_educ",
+    job_training = "onjob_training"
+  )
+names(emp)
+```
+
+2.Answer basic questions about data.
+
+```{r}
+# 2a.Read and interpret documentation on data.
+
+# 2b.What are the number of rows and columns? dim
+dim(emp) # 832 rows, 6 cols
+
+# 2c.What does an observation represent?
+  # an observation seems to represent employment data, including job titles, employment projections, median wages, and required training/education
+
+```
+
+3.Manipulate the data.
+
+```{r}
+
+# 3a.Select subsets of rows based on logical conditions. filter
+sub_employment <- emp |>
+  filter(median_wage > 50000)  # filters jobs with median wages over $50,000
+
+# 3b.Pivot the data into a tidy form. pivot_longer
+tidy_employment <- emp |>
+  pivot_longer(cols = c(employment_2022, employment_2032), names_to = "year", values_to = "employment")
+
+# 3c.Create new columns, possibly using grouped calculations. mutate, group_by, summarize
+# emp2 <- emp |>
+#   group_by(job_title) |> # group by job_title (nothing yet, just group)
+#   mutate(average_wage = mean(median_wage)) |>  # add new col average_wage
+#   summarize(total_employment_2022 = sum(employment_2022)) # short summary, only 2 cols now
+#             
+# head(emp)
+```
+
+4.Plot the data. ggplot
+
+```{r}
+
+# 4a.Make scatter plots, line plots, comparative boxplots, histograms, grouping and changing aesthetics using variables.
+# 4b.Add appropriate title, x, y labels. +labs
+ggplot(data = emp, aes(x = job_title, y = employment_2032)) +
+  geom_point() +
+  labs(title = "plot of emp in 2022", x = "job title", y = "median wage")
+
+# 4c.Interpret the plots, explaining what they show in a paragraph.
+  # the scatter plot shows the relationship between various types of job (titles) and their median wage measured in 2022
+```
+
+5.  Model the data
+
+```{r}
+names(emp)
+# 5a.Fit simple linear models with 1 or 2 terms.
+linear_model <- lm(median_wage ~ employment_2022, data = emp)
+plot(linear_model)
+
+
+# 5b.Precisely describe models mathematically.
+ #eq: med_wage = (Intercept coefficient) + (emp_2022 coefficient) * employment_2022
+
+# 5c.Predict / interpolate other data points.
+  new_data <- data.frame(employment_2022 = c(1000, 5000, 12000)) # new df
+  predictions <- predict(linear_model, newdata = new_data)
+  
+head(predictions)
+```
+
+## Linear Model (similar to class ex)
+
+```{r}
+read_delim("waterServices.txt", delim = "\t")
+# from HW
+read_water_sensor2 <- function(fname){
+  water_raw <- read_tsv(fname, comment = "#")
+  
+  water <- water_raw |>
+    slice(-1) |>
+    select(3, 5, 6) 
+  
+  colnames(water) <- c("datetime", "temp_cel", "qual")
+  
+  water <- water |>
+    mutate(datetime = ymd_hm(datetime),
+           temp_far = as.double(temp_cel)*(9/5) + 32) |>
+    mutate(hour = hour(datetime) + minute(datetime) / 60)
+  return(water)
+}
+agua <- read_water_sensor2("waterServices.txt")
+
+# modeling predicts temperature based on the hour of the day, using a cyclic (sinusoidal) pattern.
+mod1 <- lm(temp_far ~ sin(hour*2*pi/24) + cos(hour*2*pi/24), data=agua)
+
+# coefficients of model "weights" given to each term
+coef(mod1)
+
+# predictions
+predictions <- predict(mod1, agua)
+
+with(agua, plot(datetime, temp_far))
+with(agua, lines(datetime, predictions, col='purple'))
+
+# predictions on new data:
+# One single prediction for 12:16 PM:
+h = 12.26
+predict(mod1, data.frame(hour = h))  # 65.73452
+
+# model parameters:
+parameters <- coef(mod1)
+parameters
+length(parameters) # 3, meaning there are 3 parameters in our model
+
+# Manual predictions, using the fitted coefficients
+65.8570579 + -2.0192586 * sin(h * 2 * pi/24) + 0.2604793*cos(h * 2 * pi/24) 
+# 65.73452 same as above
+
+predict(mod1, data.frame(hour = 1:24))
+
+# Simplify to a 2 parameter model:
+mod2 <- lm(temp_far ~ sin(hour*2*pi/24), data=agua)
+p2 <- predict(mod2, agua)
+with(agua, lines(datetime, p2, col='red'))
+# Happens to work pretty well. The reason we add the cos() term is to be able
+# to shift the sinusoid curve left and right.
+
+mod3 <- lm(temp_far ~ hour, data=agua)
+p3 <- predict(mod3, agua)
+with(agua, lines(datetime, p3, col='blue'))
+# Adds jagged lines because hour starts repeating every 24 hours
+
+mod4 <- lm(temp_far ~ datetime, data=agua)
+p4 <- predict(mod4, agua)
+with(agua, lines(datetime, p4, col='green'))
+# Treating datetime as a continuous numerical variable
+
+# Flat line, the simplest possible model.
+mod5 <- lm(temp_far ~ 1, data=agua)
+p5 <- predict(mod5, agua)
+with(agua, lines(datetime, p5, col='orange'))
+coef(mod5)
+mean(agua$temp_far)
+
+```
+
+## basic join
+
+```{r}
+library(dplyr)
+
+df1 <- data.frame(
+  ID = c(1, 2, 3),
+  Name = c("Alice", "Bob", "Charlie"),
+  Age = c(25, 30, 35)
+)
+
+df2 <- data.frame(
+  ID = c(2, 3, 4),
+  Name = c("Bob", "Charlie", "David"),
+  Occupation = c("Engineer", "Doctor", "Lawyer")
+)
+
+# joining the two data frames based on ID
+result <- inner_join(df1, df2, by = "ID")
+
+print(result)
+#   ID    Name.x Age    Name.y Occupation
+# 1  2       Bob  30       Bob   Engineer
+# 2  3   Charlie  35   Charlie     Doctor
+```
+
+1.  The coefficient 'a' in the linear regression model y = a\*x + b represents the slope of the regression line, which is the change in y for each one-unit change in x.
+
+    \
+
+    Given that the model predicts -9.577 for x = 0 and -0.146 for x = 1, the change in y (i.e., the slope 'a') can be calculated as the difference in y-values divided by the difference in x-values.
+
+    \
+
+    So, a = (-0.146 - (-9.577)) / (1 - 0) = 9.431.

@@ -1,0 +1,7 @@
+"This is testing file 2! If you're reading this, it has been read correctly. It has 3 additional lines:
+testFile2 Line 1
+testFile2 Line 2
+testFile2 Line 3
+testFile2 Line 4
+testFile2 Line 5
+That's all! Bye!"

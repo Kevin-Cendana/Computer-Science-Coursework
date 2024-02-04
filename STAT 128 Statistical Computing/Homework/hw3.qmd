@@ -1,0 +1,133 @@
+---
+title: "hw3 stat128"
+author: "TODO"
+format: 
+  html:
+    self-contained: true
+editor: visual
+---
+
+```{r, message=FALSE}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(countrycode)
+library(tidyr)
+```
+
+## 1. Billboard
+
+The following questions refer to the `billboard` dataset from the tidyr package.
+
+#### 1. What period does the data cover?
+
+```{r}
+?billboard # description says "Song rankings for Billboard top 100 in the year 2000"
+```
+
+#### 2. Is the data complete for the year 2000?
+
+```{r}
+# I checked for completeness by checking if all weeks have every single rank from 1 to 100 (it didn't)
+library(tidyverse)
+
+b2 <- billboard |> pivot_longer ( # original is 317x79, new is 24092x5
+  cols = starts_with("wk"),
+  names_to = "week",
+  values_to = "rank"
+) |> mutate(
+  week = parse_number(week)
+)
+ggplot(b2,mapping=aes(x=week,y=rank,group=track)) + geom_line()
+
+# How many rank values are missing?
+r = b2 |> pull(rank)
+mean(is.na(r)) # 0.7797194 this means 78% of data is missing a value!
+
+```
+
+#### 3. What were the 5 most popular songs?
+
+Answer by creating and commenting on a data visualization.
+
+```{r}
+# I got the average weekly rank of each song and ordered them: 
+# 1. Amazed 2. Be With You 3. Bent 4. Come On Over Baby 5.Doesn't Really Matter
+
+# get avg of all songs
+top_songs_avg_rank <- billboard |>
+  group_by(track, artist) |>
+  summarize(average_rank = mean(c_across(starts_with("wk")), na.rm = TRUE)) |>
+  arrange(average_rank) |>
+  head(5)
+
+# scatterplot
+ggplot(top_songs_avg_rank, aes(x = reorder(track, average_rank), y = average_rank)) +
+  geom_point(size = 3, color = "blue") +
+  labs(title = "top 5 songs based on average rank", x = "songs", y = "average rank") +
+  theme_minimal() +
+  coord_flip()
+```
+
+#### 4. On average, how long does a song stay in the top 100?
+
+```{r}
+# About ~16.7 weeks
+avg_weeks_in_top_100 <- billboard |>
+  rowwise() |>
+  mutate(weeks_in_top_100 = sum(!is.na(c_across(starts_with("wk"))))) |>
+  ungroup() |>
+  summarise(average_weeks = mean(weeks_in_top_100))
+
+avg_weeks_in_top_100
+```
+
+#### 5. Visualize the "popularity decay" of all songs as they exit the number 1 position.
+
+Make and comment on a graph similar to [Figure 6.2](https://r4ds.hadley.nz/data-tidy#fig-billboard-ranks) in R4DS for all number 1 songs. Let the x axis represent the weeks since the track was last at number 1, and let the y axis represent the ranking, so that each curve starts at (0, 1) and the popularity decreases from that point on. Are there any remarkable cases?
+
+```{r}
+
+
+```
+
+#### 6. How long would you expect a number 1 song to stay in the top 20?
+
+Use the above graph to explain to a general audience.
+
+## 2. World Bank
+
+The following questions refer to the `world_bank_pop` dataset in the tidyr package.
+
+#### 1. Use the country abbreviation to join the country names to the data.
+
+```{r}
+
+```
+
+#### 2. How has the total population changed for the 5 largest countries?
+
+Answer by creating and commenting on a data visualization. Use country names, not abbreviations.
+
+```{r}
+
+```
+
+#### 3. Plot the relative growth for all countries, using the earliest year as a baseline.
+
+```{r}
+
+
+```
+
+#### 4. Is the world becoming more or less urban?
+
+```{r}
+
+```
+
+#### 5. Are there exceptions to the general urbanization trend above?
+
+```{r}
+
+```
