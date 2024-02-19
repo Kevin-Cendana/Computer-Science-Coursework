@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
         gridHeight = numberVerticalPixels / blockSize;
 
         // Initialize drawable objects
-        submarine = new Submarine();
+        submarine = new Submarine(gridWidth, gridHeight);
         player = new Player();
         grid = new Grid(gridWidth, gridHeight, blockSize);
         gameOverScreen = new GameOverScreen();
@@ -74,12 +74,18 @@ public class MainActivity extends Activity {
     }
 
 
+    // Function: Start a new game by resetting the game state
     void newGame() {
-        Random random = new Random();
-        submarine.placeSubmarine(random.nextInt(gridWidth), random.nextInt(gridHeight));
-//        Log.d("Debugging", "In newGame");
-        draw();
+        player.reset();
+        submarine.reset();
+        shot = new Shot(-1, -1); // Default shot, not on screen
+        gameOverScreen.hide(); // Hide the game over screen
+        drawables.remove(gameOverScreen); // Remove it from the drawables list
+        gameView.setDrawables(drawables); // Update GameView's drawable list
+        gameView.draw(); // Redraw the game view
+
     }
+
 
     void draw() {
         if (gameOverScreen.getIsVisible()) {
@@ -102,6 +108,14 @@ public class MainActivity extends Activity {
     }
 
     void takeShot(float touchX, float touchY) {
+
+        // Before processing the shot, check if the game is over
+        if (gameOverScreen.getIsVisible()) {
+            newGame(); // If game is over, reset the game
+            return; // Exit early so we don't process the shot as normal
+        }
+
+        // Create new Shot drawable, increment shots taken, and attempt to hit the submarine
         shot = new Shot((int) touchX / blockSize, (int) touchY / blockSize);
         player.incrementShotsTaken();
         submarine.attemptToHit(shot);
@@ -116,14 +130,14 @@ public class MainActivity extends Activity {
         }
     }
 
-
     void gameOver() {
-        gameOverScreen.show();
+        gameOverScreen.show(); // Make sure this sets isVisible to true
         if (!drawables.contains(gameOverScreen)) {
             drawables.add(gameOverScreen);
         }
-        gameView.setDrawables(drawables); // Ensure GameView knows about the updated list
-        draw();
+        gameView.setDrawables(drawables); // Update the drawables in GameView
+        gameView.draw(); // Redraw to show the game over screen
     }
+
 
 }

@@ -7,15 +7,22 @@ import android.graphics.Paint;
 
 import java.util.Random; // For RNG
 
-public class Submarine implements Drawable {
+public class Submarine implements Drawable, Resettable {
     private int xPos; // Submarine position on grid
     private int yPos; // Submarine position on grid
     private int distanceFromShot;
     private boolean isHit; // Submarine flag for if it's hit
+    private int gridWidth;
+    private int gridHeight;
 
     // Constructor
-    public Submarine() {
+    public Submarine(int gridWidth, int gridHeight) {
         this.isHit = false;         // Initially, not hit
+        this.gridWidth = gridWidth; // Set grid width
+        this.gridHeight = gridHeight; // Set grid height
+
+        // Place the submarine
+        placeSubmarine(gridWidth, gridHeight);
     }
 
     // Getters and Setters
@@ -29,19 +36,21 @@ public class Submarine implements Drawable {
     public void setIsHit(boolean hit) { this.isHit = hit;}
     public void setDistanceFromShot(int distanceFromShot) { this. distanceFromShot = distanceFromShot; }
     public int getDistanceFromShot() { return this.distanceFromShot; };
+
+    // Function: Place the submarine on the grid randomly
+    public void placeSubmarine(int gridWidth, int gridHeight) {
+        Random random = new Random(); // RNG
+        this.xPos = random.nextInt(gridWidth); // Set sub width
+        this.yPos = random.nextInt(gridHeight); // Set sub height
+    }
+
+    // Function: Calculate the sub's distance from the shot
     public int calculateDistanceFromShot(Shot shot) {
         int horizontalGapFromShot = shot.getXPos() - this.getXPos();
         int verticalGapFromShot = shot.getYPos() - this.getYPos();
         return (int)Math.sqrt(
                 ((horizontalGapFromShot * horizontalGapFromShot) +
                         (verticalGapFromShot * verticalGapFromShot)));
-    }
-
-    // Function: Randomly place the submarine on the grid
-    public void placeSubmarine(int gridWidth, int gridHeight) {
-        Random random = new Random(); // RNG
-        this.xPos = random.nextInt(gridWidth); // Set sub width
-        this.yPos = random.nextInt(gridHeight); // Set sub height
     }
 
     // Function: Check if a shot hit the sub by passing in Shot coordinates.
@@ -56,10 +65,6 @@ public class Submarine implements Drawable {
         }
     }
 
-    public void distanceFromShot() {
-
-    }
-
     // Function: Draw the submarine
     @Override
     public void draw(Canvas canvas, Paint paint, int blockSize) {
@@ -69,5 +74,13 @@ public class Submarine implements Drawable {
             int top = yPos * blockSize;
             canvas.drawRect(left, top, left + blockSize, top + blockSize, paint);
         }
+    }
+
+    // Function: Reset the submarine
+    @Override
+    public void reset() {
+        this.isHit = false; // Reset hit flag
+        this.distanceFromShot = 0; // Reset distance from shot
+        placeSubmarine(gridWidth, gridHeight); // Place the sub again
     }
 }

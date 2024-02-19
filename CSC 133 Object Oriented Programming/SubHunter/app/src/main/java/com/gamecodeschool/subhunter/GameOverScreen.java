@@ -43,6 +43,6 @@ public class GameOverScreen implements Drawable {
                 blockSize * 18, paint);
 
         // todo - Currently resets the visibility if you want "BOOM!" to only show once per hit
-        // hide();
+        //hide();
     }
 }

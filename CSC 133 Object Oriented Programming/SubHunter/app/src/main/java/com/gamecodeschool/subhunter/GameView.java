@@ -101,11 +101,18 @@ public class GameView {
 
     // Function: Draw the game's text
     public void drawScore(int shotCount, int distanceFromSub, int blockSize) {
+
+        // Set the paint color and text size
         paint.setTextSize(blockSize * 2);
         paint.setColor(Color.argb(255, 0, 0, 255));
+
+        // If the distance is greater than 0, show it. Else, show nothing.
+        String distanceText = distanceFromSub > 0 ? String.valueOf(distanceFromSub) : "";
+
+        // Draw the text
         canvas.drawText(
                 "Shots Taken: " + shotCount +
-                        "  Distance: " + distanceFromSub,
+                        "  Distance: " + distanceText,
                 blockSize, blockSize * 1.75f,
                 paint);
 
