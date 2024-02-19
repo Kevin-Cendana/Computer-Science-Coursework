@@ -4,8 +4,8 @@ package com.gamecodeschool.subhunter;
 
 public class Player {
     private int shotsTaken;
-    private float horizontalTouched;
-    private float verticalTouched;
+    private int horizontalTouched;
+    private int verticalTouched;
 
     // Constructor
     public Player() {
@@ -19,14 +19,7 @@ public class Player {
     public void setShotsTaken(int shotsTaken) {this.shotsTaken = shotsTaken;}
     public void incrementShotsTaken() {this.shotsTaken++;}
     public float getHorizontalTouched() {return horizontalTouched;}
-    public void setHorizontalTouched(float horizontalTouched) {this.horizontalTouched = horizontalTouched;}
+    public void setHorizontalTouched(int horizontalTouched) {this.horizontalTouched = horizontalTouched;}
     public float getVerticalTouched() {return verticalTouched;}
-    public void setVerticalTouched(float verticalTouched) {this.verticalTouched = verticalTouched;}
-
-    // Function: Record a shot
-    public void recordShot(float x, float y) {
-        this.horizontalTouched = x;
-        this.verticalTouched = y;
-        incrementShotsTaken();
-    }
+    public void setVerticalTouched(int verticalTouched) {this.verticalTouched = verticalTouched;}
 }

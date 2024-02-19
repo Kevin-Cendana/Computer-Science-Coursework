@@ -5,7 +5,7 @@
 *   - Create interface /  abstract class for Drawable entities (Player, Submarine, Grid)
 *   - Apply encapsulation (private classes, getters/setters)
 *  todo:
-*   - Consolidate code into GameLogic / GameView based on if it's for drawing or logc
+*   - Consolidate code into GameLogic / GameView based on if it's for drawing or logic
 *   - Apply polymorphism: simplify conditional logic based on data types
 *   - Break down long functions (ex. Draw everything in a loop)
 *   - Fix the draw for loop around line 110
@@ -36,16 +36,17 @@ public class MainActivity extends Activity {
     int gridHeight;
     float horizontalTouched = -100;
     float verticalTouched = -100;
-    boolean hit = false;
-    int distanceFromSub;
     boolean debugging = false;
 
-    // Entities
+    // Drawable Objects
     private Submarine submarine;
     private Player player;
     private Shot shot;
     private Grid grid;
-    private List<Drawable> drawables = new ArrayList<>(); // List of entities to be drawn
+    private GameOverScreen gameOverScreen;
+    private List<Drawable> drawables = new ArrayList<>(); // List of objects to be drawn
+
+
 
     // Here are all the objects(instances) of classes that we need to do some drawing
     ImageView gameView;
@@ -54,16 +55,15 @@ public class MainActivity extends Activity {
     Paint paint;
 
 
-    /* Android runs this code just before the app is seen by the player. This makes it a good place to add
-        the code that is needed for the one-time setup. */
+    /* Runs just before the app is seen by the player, this code is needed for the one-time setup. */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Get the current device's screen resolution
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+
             display.getSize(size);
-        }
+
 
         // Initialize our size based variables based on the screen resolution
         numberHorizontalPixels = size.x;
@@ -83,11 +83,15 @@ public class MainActivity extends Activity {
         // Tell Android to set our drawing as the view for this app
         setContentView(gameView);
 
-        // Create all entities
+        // Create all entities & add them to drawable arraylist
         super.onCreate(savedInstanceState);
         submarine = new Submarine();
         player = new Player();
         grid = new Grid(gridWidth, gridHeight, blockSize);
+        gameOverScreen = new GameOverScreen();
+
+        drawables.add(grid);
+        drawables.add(submarine);
 
         Log.d("Debugging", "In onCreate");
         newGame();
@@ -106,14 +110,19 @@ public class MainActivity extends Activity {
     /* Here we will do all the drawing. The grid lines, the HUD and the touch indicator*/
     void draw() {
         gameView.setImageBitmap(blankBitmap);
+        // Wipe the screen with a white color
+        canvas.drawColor(Color.argb(255, 255, 255, 255));
+
+        // Check if the game is over and only draw the GameOverScreen if it is
+        if (gameOverScreen.getIsVisible()) {
+            gameOverScreen.draw(canvas, paint, blockSize);
+            return; // Skip drawing anything else
+        }
 
         // Draw all entities in a loop
         for (Drawable drawable : drawables) {
             drawable.draw(canvas, paint, blockSize);
         }
-
-        // Wipe the screen with a white color
-        canvas.drawColor(Color.argb(255, 255, 255, 255));
 
         // Change the paint color to black
         paint.setColor(Color.argb(255, 0, 0, 0));
@@ -123,7 +132,7 @@ public class MainActivity extends Activity {
         paint.setColor(Color.argb(255, 0, 0, 255));
         canvas.drawText(
                 "Shots Taken: " + player.getShotsTaken() +
-                        "  Distance: " + distanceFromSub,
+                        "  Distance: " + submarine.getDistanceFromShot(),
                 blockSize, blockSize * 1.75f,
                 paint);
 
@@ -140,9 +149,7 @@ public class MainActivity extends Activity {
         Log.d("Debugging", "In onTouchEvent");
         // Has the player removed their finger from the screen?
         if((motionEvent.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
-
-            // Process the player's shot by passing the
-            // coordinates of the player's finger to takeShot
+            // Process the player's shot by passing the coordinates of the player's finger to takeShot
             takeShot(motionEvent.getX(), motionEvent.getY());
         }
 
@@ -155,56 +162,50 @@ public class MainActivity extends Activity {
     void takeShot(float touchX, float touchY){
         Log.d("Debugging", "In takeShot");
 
-        // Add one to the shotsTaken variable
+        // Create new shot
+        shot = new Shot((int)touchX/blockSize, (int)touchY/blockSize);
+
+        // Make new shot & add one to the shotsTaken variable
         player.incrementShotsTaken();
 
         // Convert the float screen coordinates into int grid coordinates
-        player.recordShot((int) touchX / blockSize, (int) touchY / blockSize);
+        horizontalTouched = (int) touchX / blockSize;
+        verticalTouched = (int) touchY / blockSize;
 
         // Check if shot hit the sub
-        hit = horizontalTouched == submarine.getHorizontalPosition() && verticalTouched == submarine.getVerticalPosition();
-        submarine.setHit(hit); // Update the submarine's hit status
-
-        // How far away horizontally and vertically was the shot from the sub
-        int horizontalGap = (int)horizontalTouched -
-                submarine.getHorizontalPosition();
-        int verticalGap = (int)verticalTouched -
-                submarine.getVerticalPosition();
-
-        // Use Pythagoras's theorem to get the distance travelled in a straight line
-        distanceFromSub = (int)Math.sqrt(
-                ((horizontalGap * horizontalGap) +
-                        (verticalGap * verticalGap)));
+        submarine.attemptToHit(shot);
 
         // If there is a hit call boom
-        if(hit)
+        if(submarine.getIsHit()) {
+            submarine.setIsHit(true);
             boom();
-            // Otherwise call draw as usual
-        else draw();
+        }
+        // Otherwise call draw as usual. Make sure to add shot, then remove so we don't redraw each shot
+        else{
+            drawables.add(shot);
+            draw();
+            drawables.remove(shot);
+        }
+
     }
 
     // This code says "BOOM!"
     void boom(){
-
+        // Set the image to blank
         gameView.setImageBitmap(blankBitmap);
 
-        // Wipe the screen with a red color
-        canvas.drawColor(Color.argb(255, 255, 0, 0));
+        // Trigger the boom effect
+        gameOverScreen.show();
 
-        // Draw some huge white text
-        paint.setColor(Color.argb(255, 255, 255, 255));
-        paint.setTextSize(blockSize * 10);
+        // Add boom to the drawables list to ensure it gets drawn
+        if (!drawables.contains(gameOverScreen)) {
+            drawables.add(gameOverScreen);
+        }
 
-        canvas.drawText("BOOM!", blockSize * 4,
-                blockSize * 14, paint);
+        // Redraw the screen to show the "BOOM!" message
+        draw();
 
-        // Draw some text to prompt restarting
-        paint.setTextSize(blockSize * 2);
-        canvas.drawText("Take a shot to start again",
-                blockSize * 8,
-                blockSize * 18, paint);
-
-        // Start a new game
+        // Optionally, start a new game or wait for user action to proceed
         newGame();
     }
 
@@ -229,13 +230,13 @@ public class MainActivity extends Activity {
         canvas.drawText("verticalTouched = " +
                         verticalTouched, 50,
                 blockSize * 9, paint);
-        canvas.drawText("subHorizontalPosition = " +
-                        submarine.getHorizontalPosition(), 50,
+        canvas.drawText("subxPos = " +
+                        submarine.getXPos(), 50,
                 blockSize * 10, paint);
-        canvas.drawText("subVerticalPosition = " +
-                        submarine.getVerticalPosition(), 50,
+        canvas.drawText("subyPos = " +
+                        submarine.getYPos(), 50,
                 blockSize * 11, paint);
-        canvas.drawText("hit = " + hit,
+        canvas.drawText("hit = " + submarine.getIsHit(),
                 50, blockSize * 12, paint);
         canvas.drawText("shotsTaken = " +
                         player.getShotsTaken(),
