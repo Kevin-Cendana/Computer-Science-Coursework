@@ -15,16 +15,22 @@ public class GameView {
     private Canvas canvas;
     private Paint paint;
     private List<Drawable> drawables;
+    private Player player;
+    private Shot shot;
+    private Submarine submarine;
     int blockSize;
 
 
-
     // Constructor
-    public GameView(Context context, int screenWidth, int screenHeight, List<Drawable> drawables, int blockSize) {
+    public GameView(ImageView imageView, Context context, List<Drawable> drawables,
+                    Player player, Submarine submarine, Shot shot,
+                    int screenWidth, int screenHeight,  int blockSize) {
         this.imageView = imageView;
         this.drawables = drawables;
         this.blockSize = blockSize;
-
+        this.player = player;
+        this.shot = shot; // Default shot, not on screen
+        this.submarine = submarine; // Default submarine, not on screen
 
         // Initialize bitmap, canvas, and paint
         blankBitmap = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.ARGB_8888);
@@ -36,28 +42,72 @@ public class GameView {
     }
 
     // Getters and Setters
-    public ImageView getImageView() { return imageView; }
-    public void setImageView(ImageView imageView) { this.imageView = imageView; }
-    public Bitmap getBlankBitmap() { return blankBitmap; }
-    public void setBlankBitmap(Bitmap blankBitmap) { this.blankBitmap = blankBitmap; }
-    public Canvas getCanvas() { return canvas; }
-    public void setCanvas(Canvas canvas) { this.canvas = canvas; }
-    public Paint getPaint() { return paint; }
-    public void setPaint(Paint paint) { this.paint = paint; }
-    public List<Drawable> getDrawables() { return drawables; }
-    public void setDrawables(List<Drawable> drawables) { this.drawables = drawables; }
+    public ImageView getImageView() {
+        return imageView;
+    }
+
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
+    }
+
+    public Bitmap getBlankBitmap() {
+        return blankBitmap;
+    }
+
+    public void setBlankBitmap(Bitmap blankBitmap) {
+        this.blankBitmap = blankBitmap;
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
+    }
+
+    public Paint getPaint() {
+        return paint;
+    }
+
+    public void setPaint(Paint paint) {
+        this.paint = paint;
+    }
+
+    public List<Drawable> getDrawables() {
+        return drawables;
+    }
+
+    public void setDrawables(List<Drawable> drawables) {
+        this.drawables = drawables;
+    }
 
     // Function: Draw a Drawable object
     public void draw() {
         // Clear the canvas
         canvas.drawColor(Color.WHITE);
 
-        // Draw each drawable
+        // Draw each drawable (Player, Submarine, Shot, Grid)
         for (Drawable drawable : drawables) {
             drawable.draw(canvas, paint, blockSize);
         }
 
-        // Invalidate to request a redraw
-        //invalidate();
+        // Draw score
+        drawScore(player.getShotsTaken(), submarine.getDistanceFromShot(), blockSize);
+
+        // Update the ImageView with the modified Bitmap
+        imageView.setImageBitmap(blankBitmap);
+    }
+
+    // Function: Draw the game's text
+    public void drawScore(int shotCount, int distanceFromSub, int blockSize) {
+        paint.setTextSize(blockSize * 2);
+        paint.setColor(Color.argb(255, 0, 0, 255));
+        canvas.drawText(
+                "Shots Taken: " + shotCount +
+                        "  Distance: " + distanceFromSub,
+                blockSize, blockSize * 1.75f,
+                paint);
+
     }
 }
