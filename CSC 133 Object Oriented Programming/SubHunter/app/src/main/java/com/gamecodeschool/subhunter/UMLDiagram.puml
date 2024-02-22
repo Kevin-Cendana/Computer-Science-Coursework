@@ -1,0 +1,41 @@
+@startuml
+
+' Define interfaces
+interface Drawable {
+}
+
+interface Resettable {
+}
+
+' Define classes
+class MainActivity {
+}
+
+class GameView {
+}
+
+class Player {
+}
+
+class Submarine {
+}
+
+class Shot {
+}
+
+class Grid {
+}
+
+class GameOverScreen {
+}
+
+' Implementations
+Player -up-|> Resettable
+Submarine -up-|> Resettable
+Submarine -up-|> Drawable
+Shot -up-|> Resettable
+Shot -up-|> Drawable
+Grid -up-|> Drawable
+GameOverScreen -up-|> Drawable
+
+@enduml

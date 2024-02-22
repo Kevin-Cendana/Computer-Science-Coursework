@@ -101,7 +101,6 @@ public class GameView {
 
     // Function: Draw the game's text
     public void drawScore(int shotCount, int distanceFromSub, int blockSize) {
-
         // Set the paint color and text size
         paint.setTextSize(blockSize * 2);
         paint.setColor(Color.argb(255, 0, 0, 255));

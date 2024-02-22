@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-public class Shot implements Drawable {
+public class Shot implements Drawable, Resettable {
     private int xPos;
     private int yPos;
 
@@ -25,5 +25,11 @@ public class Shot implements Drawable {
         int left = (int) xPos * blockSize;
         int top = (int) yPos * blockSize;
         canvas.drawRect(left, top, left + blockSize, top + blockSize, paint);
+    }
+
+    @Override
+    public void reset() {
+        this.xPos = -1; // Reset shot position
+        this.yPos = -1; // Reset shot position
     }
 }
