@@ -5,7 +5,7 @@
  *   - Add: Debug.java mode and have it triggered with a simple flag.
  *   - Fix: Game text being drawn over GameOver
  *   - Remove (when finished): Submarine being drawn as a Drawable, have it draw only in Debug
- *   - Maybe: Rename MainActivity? Idk if this is vague
+
  * */
 package com.gamecodeschool.subhunter;
 
@@ -19,13 +19,8 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends Activity {
-    int numberHorizontalPixels;
-    int numberVerticalPixels;
-    int blockSize;
-    int gridWidth = 40;
-    int gridHeight;
-
-    // Drawable Objects
+    GameContext gameContext; // Class that holds game variables such as screen size
+    private GameView gameView; // Class that handles drawing
     private Submarine submarine;
     private Player player;
     private Shot shot;
@@ -33,47 +28,16 @@ public class MainActivity extends Activity {
     private GameOverScreen gameOverScreen;
     private ArrayList<Drawable> drawables = new ArrayList<>(); // List of objects to be drawn
     private ArrayList<Resettable> resettables= new ArrayList<>(); // List of objects to be reset on new game
-    private GameView gameView; // Class that handles drawing
 
-    // Function: Initialize the game
+    // Function: Set Up the game
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Initialize screen size variables
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        numberHorizontalPixels = size.x;
-        numberVerticalPixels = size.y;
-        blockSize = numberHorizontalPixels / gridWidth;
-        gridHeight = numberVerticalPixels / blockSize;
-
-        // Initialize drawable objects
-        submarine = new Submarine(gridWidth, gridHeight);
-        player = new Player();
-        grid = new Grid(gridWidth, gridHeight, blockSize);
-        shot = new Shot(-1, -1); // Default shot, not on screen
-        gameOverScreen = new GameOverScreen();
-
-        // Setup the GameView, the class that handles drawing
-        ImageView imageView = new ImageView(this);
-        gameView = new GameView(imageView, this, new ArrayList<>(),
-                player, submarine, shot,
-                numberHorizontalPixels, numberVerticalPixels,  blockSize);
-        setContentView(imageView);
-
-        // Add drawable objects to the drawables list
-        drawables.add(grid);
-        drawables.add(submarine);
-        gameView.setDrawables(drawables); // Update GameView's drawable list
-
-        // Add resettable objects to the resettable list
-        resettables.add(player);
-        resettables.add(submarine);
-        resettables.add(shot);
-
-        newGame();
+        initializeGameContext(); // Initialize GameContext
+        initializeGameObjects(); // Initialize game objects
+        initializeGameView(); // Initialize GameView
+        initializeGameLists(); // Initialize game object lists
+        startNewGame();
     }
 
     // Function: Handle touch events
@@ -85,8 +49,52 @@ public class MainActivity extends Activity {
         return true;
     }
 
+    // Function: Initialize GameContext, the class that holds game variables
+    private void initializeGameContext() {
+        // Initialize screen size variables
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int numberHorizontalPixels = size.x;
+        int numberVerticalPixels = size.y;
+
+        // Create a new GameContext object
+        gameContext = new GameContext(numberHorizontalPixels, numberVerticalPixels);
+        gameContext.logGameContext(); // Log the GameContext variables
+    }
+
+    // Function: Initialize the GameView, the class that handles drawing
+    private void initializeGameView() {
+        ImageView imageView = new ImageView(this);
+        gameView = new GameView(imageView, this, new ArrayList<>(),
+                player, submarine, shot,
+                gameContext);
+        setContentView(imageView);
+    }
+
+    // Function: Initialize game objects, such as the submarine, player, and grid
+    private void initializeGameObjects() {
+        submarine = new Submarine(gameContext);
+        player = new Player();
+        grid = new Grid(gameContext);
+        shot = new Shot(); // Default shot, not on screen
+        gameOverScreen = new GameOverScreen();
+    }
+
+    // Function: Initialize game object lists, such as Resettable and Drawable objects
+    private void initializeGameLists() {
+        drawables.add(grid);
+        if (Debug.getDebugMode()) { // If debug mode is on, draw the submarine
+            drawables.add(submarine);
+        }
+        gameView.setDrawables(drawables); // Update GameView's drawable list
+        resettables.add(player);
+        resettables.add(submarine);
+        resettables.add(shot);
+    }
+
     // Function: Start a new game by resetting the game state
-    void newGame() {
+    private void startNewGame() {
         // Reset all resettable objects (Player, Submarine, Shot, etc)
         for (Resettable resettable : resettables) {
             resettable.reset();
@@ -95,11 +103,10 @@ public class MainActivity extends Activity {
         drawables.remove(gameOverScreen); // Remove it from the drawables list
         gameView.setDrawables(drawables); // Update GameView's drawable list
         gameView.draw(); // Redraw the game view
-
     }
 
     // Function: Draw the GameView
-    void draw() {
+    private void draw() {
         // If the game over screen is visible, add it to the drawables list
         if (gameOverScreen.getIsVisible()) {
             if (!drawables.contains(gameOverScreen)) {
@@ -115,15 +122,15 @@ public class MainActivity extends Activity {
     }
 
     // Function: Take a shot at the submarine
-    void takeShot(float touchX, float touchY) {
+    private void takeShot(float touchX, float touchY) {
         // Before processing the shot, check if the game is over
         if (gameOverScreen.getIsVisible()) {
-            newGame(); // If game is over, reset the game
+            startNewGame(); // If game is over, reset the game
             return; // Exit early so we don't process the shot as normal
         }
 
         // Create new Shot drawable, increment shots taken, and attempt to hit the submarine
-        shot = new Shot((int) touchX / blockSize, (int) touchY / blockSize);
+        shot = new Shot((int) touchX / gameContext.getBlockSize(), (int) touchY / gameContext.getBlockSize());
         player.incrementShotsTaken();
         submarine.attemptToHit(shot);
 
@@ -136,10 +143,11 @@ public class MainActivity extends Activity {
             draw();
             drawables.remove(shot); // Remove the shot so it's not permanently drawn
         }
+        Debug.logGameContext(gameContext); // Log the GameContext variables
     }
 
     // Function: End the game
-    void gameOver() {
+    private void gameOver() {
         gameOverScreen.show(); // Make sure this sets isVisible to true
         if (!drawables.contains(gameOverScreen)) {
             drawables.add(gameOverScreen);
@@ -147,6 +155,5 @@ public class MainActivity extends Activity {
         gameView.setDrawables(drawables); // Update the drawables in GameView
         gameView.draw(); // Redraw to show the game over screen
     }
-
 
 }

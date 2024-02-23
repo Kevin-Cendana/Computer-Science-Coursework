@@ -11,10 +11,10 @@ interface Resettable {
 class MainActivity {
 }
 
-class GameView {
+class GameContext {
 }
 
-class Player {
+class GameView {
 }
 
 class Submarine {
@@ -27,6 +27,9 @@ class Grid {
 }
 
 class GameOverScreen {
+}
+
+class Debug {
 }
 
 ' Implementations

@@ -24,16 +24,16 @@ public class GameView {
     // Constructor
     public GameView(ImageView imageView, Context context, List<Drawable> drawables,
                     Player player, Submarine submarine, Shot shot,
-                    int screenWidth, int screenHeight,  int blockSize) {
+                    GameContext gameContext) {
         this.imageView = imageView;
         this.drawables = drawables;
-        this.blockSize = blockSize;
+        this.blockSize = gameContext.getBlockSize();
         this.player = player;
         this.shot = shot; // Default shot, not on screen
         this.submarine = submarine; // Default submarine, not on screen
 
         // Initialize bitmap, canvas, and paint
-        blankBitmap = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.ARGB_8888);
+        blankBitmap = Bitmap.createBitmap(gameContext.getNumberHorizontalPixels(), gameContext.getNumberVerticalPixels(), Bitmap.Config.ARGB_8888);
         canvas = new Canvas(blankBitmap);
         paint = new Paint();
 
@@ -87,13 +87,14 @@ public class GameView {
         // Clear the canvas
         canvas.drawColor(Color.WHITE);
 
+        // Draw score
+        drawScore(player.getShotsTaken(), submarine.getDistanceFromShot(), blockSize);
+
+
         // Draw each drawable (Player, Submarine, Shot, Grid)
         for (Drawable drawable : drawables) {
             drawable.draw(canvas, paint, blockSize);
         }
-
-        // Draw score
-        drawScore(player.getShotsTaken(), submarine.getDistanceFromShot(), blockSize);
 
         // Update the ImageView with the modified Bitmap
         imageView.setImageBitmap(blankBitmap);

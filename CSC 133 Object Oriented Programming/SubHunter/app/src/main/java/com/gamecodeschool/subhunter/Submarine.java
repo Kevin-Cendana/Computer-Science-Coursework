@@ -12,17 +12,12 @@ public class Submarine implements Drawable, Resettable {
     private int yPos; // Submarine position on grid
     private int distanceFromShot;
     private boolean isHit; // Submarine flag for if it's hit
-    private int gridWidth;
-    private int gridHeight;
+    private GameContext gameContext;
 
     // Constructor
-    public Submarine(int gridWidth, int gridHeight) {
-        this.isHit = false;         // Initially, not hit
-        this.gridWidth = gridWidth; // Set grid width
-        this.gridHeight = gridHeight; // Set grid height
-
-        // Place the submarine
-        placeSubmarine(gridWidth, gridHeight);
+    public Submarine(GameContext gameContext) {
+        this.isHit = false;
+        this.gameContext = gameContext;
     }
 
     // Getters and Setters
@@ -38,10 +33,10 @@ public class Submarine implements Drawable, Resettable {
     public int getDistanceFromShot() { return this.distanceFromShot; };
 
     // Function: Place the submarine on the grid randomly
-    public void placeSubmarine(int gridWidth, int gridHeight) {
+    public void placeSubmarine() {
         Random random = new Random(); // RNG
-        this.xPos = random.nextInt(gridWidth); // Set sub width
-        this.yPos = random.nextInt(gridHeight); // Set sub height
+        this.xPos = random.nextInt(gameContext.getGridWidth()); // Set sub width
+        this.yPos = random.nextInt(gameContext.getGridHeight()); // Set sub height
     }
 
     // Function: Calculate the sub's distance from the shot
@@ -81,6 +76,6 @@ public class Submarine implements Drawable, Resettable {
     public void reset() {
         this.isHit = false; // Reset hit flag
         this.distanceFromShot = 0; // Reset distance from shot
-        placeSubmarine(gridWidth, gridHeight); // Place the sub again
+        placeSubmarine(); // Place the sub again
     }
 }
