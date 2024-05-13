@@ -1,0 +1,4 @@
+([('FinalProject4',
+   '/Users/home/Desktop/Workspace/Computer-Science-Coursework/CSC 154 '
+   'Cybersecurity/dist/FinalProject4',
+   'EXECUTABLE')],)
