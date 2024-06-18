@@ -3,26 +3,30 @@ Class projects made during my first CS classes! Simple C++ code that I learned w
 
 ## Topics
 
+### Basics
 - Variables 
-- Type Safety 
-- Conditional 
-- Statements 
-- Loops 
+- Types & Type Safety 
+- Conditionals (If Statements) 
+- Control Structures (For & While Loops)
 - Functions 
 - Structs 
 - Arrays 
-- Vectors 
-- File Input / Output 
-- String Manipulation 
-- Functions 
-- Parameter Passing 
+- Functions
+- Parameter Passing
 - Debugging Strategies
-- Pointers
-- Classes
+
+### Classes
 - Polymorphism
 - Inheritance
 - Encapsulation
 - Data Abstraction
+  
+### In-Depth
+- String Manipulation 
+- Pointers
 - Exception Handling
 - Templates
 - Recursion
+
+
+
